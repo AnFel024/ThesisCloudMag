@@ -23,13 +23,21 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+    // Guava
+    implementation 'com.google.guava:guava:31.1-jre'
 
     // AWS
     implementation platform('software.amazon.awssdk:bom:2.15.0')
     implementation 'software.amazon.awssdk:regions:2.20.27'
     implementation 'software.amazon.awssdk:ec2:2.20.27'
 
-    // Validatos
+    //SSH
+    implementation 'com.jcraft:jsch:0.1.55'
+
+    // Validations
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '8.0.0.Final'
 
     compileOnly 'org.projectlombok:lombok'

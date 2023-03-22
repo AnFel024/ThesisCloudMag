@@ -1,5 +1,6 @@
 package com.antithesis.cloudmag;
 
+import com.antithesis.cloudmag.tools.ProfileTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +13,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 public class CloudMagApplication {
 
     public static void main(String[] args) {
-        System.setProperty("ACTIVE_PROFILE", "local");
+        ProfileTool.setLoaderProfile();
         SpringApplication.run(CloudMagApplication.class, args);
     }
 }
