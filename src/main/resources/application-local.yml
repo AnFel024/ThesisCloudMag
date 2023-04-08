@@ -1,6 +1,2 @@
 server:
   port: 8081
-
-aws-credentials:
-  aws-public-key:  "AKIAZOW6FHBCJVU3OA7O"
-  aws-private-key: "iy/pruCQO/bxsGsFIUYsPSWacDqsMlKVziXufCKO"
