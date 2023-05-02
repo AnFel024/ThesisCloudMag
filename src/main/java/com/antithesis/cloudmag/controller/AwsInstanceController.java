@@ -44,7 +44,7 @@ public class AwsInstanceController {
         return ResponseEntity.ok().body("");
     }
 
-    @GetMapping("/test-rest/{name}")
+    @GetMapping("/create-reposiroty/{name}")
     public ResponseEntity<?> testRest(@PathVariable("name") String name) {
         return ResponseEntity.ok().body(gitHubClient.createRepository(name));
     }

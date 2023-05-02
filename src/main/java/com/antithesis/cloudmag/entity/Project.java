@@ -1,0 +1,43 @@
+package com.antithesis.cloudmag.entity;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(	name = "projects",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "id"),
+                @UniqueConstraint(columnNames = "project_name")
+        })
+public class Project {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private Integer id;
+
+    @NotBlank
+    private String project_name;
+
+    @NotBlank
+    private String repository_url;
+
+    @NotBlank
+    private String creator;
+
+    @NotBlank
+    private LocalDateTime created_at;
+}
+

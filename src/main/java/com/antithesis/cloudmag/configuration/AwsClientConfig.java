@@ -12,7 +12,6 @@ import software.amazon.awssdk.services.ec2.Ec2Client;
 @Configuration
 public class AwsClientConfig {
 
-
     public AwsClientConfig() {
     }
 
