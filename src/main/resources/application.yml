@@ -7,3 +7,10 @@ github:
 aws-credentials:
   aws-public-key: "AKIAZOW6FHBCJVU3OA7O"
   aws-private-key: "iy/pruCQO/bxsGsFIUYsPSWacDqsMlKVziXufCKO"
+
+azure-credentials:
+  azure-key-value: "Uej8Q~IXNmT.Z9fmLtAK~iiLyiHhEVE1e0Qg_aAA"
+  azure-secret-id: "1b5a8190-2ce1-496d-a31a-95b7ae4c56d7"
+  azure-subscription-id: "82a36662-bb36-43bb-a9d7-fafdf3ce29a8"
+  azure-tenant-id: "035f4085-6dc2-4119-978b-323f6cfaacc5"
+  azure-client-id: "03e43d9c-6acb-42d1-b8bb-97c38c185659"
