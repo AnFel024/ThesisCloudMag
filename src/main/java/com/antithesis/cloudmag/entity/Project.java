@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +26,7 @@ import java.util.UUID;
                 @UniqueConstraint(columnNames = "id"),
                 @UniqueConstraint(columnNames = "project_name")
         })
+@Builder
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,7 +41,6 @@ public class Project {
     @NotBlank
     private String creator;
 
-    @NotBlank
-    private LocalDateTime created_at;
+    private Long created_at;
 }
 
