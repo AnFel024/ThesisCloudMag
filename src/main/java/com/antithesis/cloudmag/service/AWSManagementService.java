@@ -1,9 +1,9 @@
 package com.antithesis.cloudmag.service;
 
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ec2.Ec2Client;
+import software.amazon.awssdk.services.ec2.model.InstanceType;
 import software.amazon.awssdk.services.ec2.model.RunInstancesRequest;
 import software.amazon.awssdk.services.ec2.model.RunInstancesResponse;
 
@@ -28,7 +28,7 @@ public class AWSManagementService {
         RunInstancesRequest request = RunInstancesRequest.builder()
                 .securityGroupIds("sg-049be70bb05fbf786")
                 .keyName("THESIS_WORK_KEY_PAIR")
-                .instanceType("t2.micro")
+                .instanceType(InstanceType.T2_MICRO)
                 .imageId("ami-0557a15b87f6559cf")
                 .minCount(1)
                 .maxCount(1)

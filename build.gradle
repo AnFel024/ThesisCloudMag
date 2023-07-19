@@ -23,13 +23,45 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+
+    // Guava
+    implementation 'com.google.guava:guava:31.1-jre'
+
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation 'org.postgresql:postgresql:42.6.0'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.0.5'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.5'
+
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+    implementation 'org.springframework.boot:spring-boot-starter-security:1.2.5.RELEASE'
+    implementation "jakarta.xml.bind:jakarta.xml.bind-api"
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
 
     // AWS
     implementation platform('software.amazon.awssdk:bom:2.15.0')
     implementation 'software.amazon.awssdk:regions:2.20.27'
     implementation 'software.amazon.awssdk:ec2:2.20.27'
 
-    // Validatos
+    // https://mvnrepository.com/artifact/com.azure/azure-identity
+    implementation 'com.azure:azure-identity:1.9.0'
+
+    //SSH
+    implementation 'com.jcraft:jsch:0.1.55'
+
+    // Validations
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '8.0.0.Final'
 
     compileOnly 'org.projectlombok:lombok'
