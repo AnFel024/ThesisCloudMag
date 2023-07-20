@@ -1,3 +1,9 @@
 server:
   port: 8088
-#
+  
+spring:
+  datasource:
+    url: jdbc:postgresql://54.235.239.59:5432/test
+    username: postgres
+    password: 123987
+  
