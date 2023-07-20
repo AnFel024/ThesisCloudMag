@@ -31,6 +31,7 @@ public class ProjectService {
     }
 
     public List<Project> listProjects(String userOwner) {
-        projectRepository.findAll();
+        // TODO pasar long fecha a localdatetime
+        return projectRepository.findByUserOwner(userOwner);
     }
 }
