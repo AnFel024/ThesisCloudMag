@@ -2,20 +2,20 @@ package com.antithesis.cloudmag.service;
 
 import com.antithesis.cloudmag.entity.Project;
 import com.antithesis.cloudmag.repository.ProjectRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.UUID;
 
 @Service
-public class CreateProjectService {
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
+public class ProjectService {
 
     private final ProjectRepository projectRepository;
-
-    public CreateProjectService(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
-    }
 
     public void createProject(String name, String userOwner) {
         UUID uuid = UUID.randomUUID();
@@ -28,5 +28,9 @@ public class CreateProjectService {
                 .build();
         // TODO Post body
         projectRepository.save(project);
+    }
+
+    public List<Project> listProjects(String userOwner) {
+        projectRepository.findAll();
     }
 }
