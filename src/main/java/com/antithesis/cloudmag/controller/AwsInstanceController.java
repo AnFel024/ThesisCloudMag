@@ -3,7 +3,7 @@ package com.antithesis.cloudmag.controller;
 import com.antithesis.cloudmag.client.GitHubClient;
 import com.antithesis.cloudmag.service.AWSKeyPairService;
 import com.antithesis.cloudmag.service.AWSManagementService;
-import com.antithesis.cloudmag.service.CreateProjectService;
+import com.antithesis.cloudmag.service.ProjectService;
 import lombok.SneakyThrows;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -19,13 +19,13 @@ public class AwsInstanceController {
     private final AWSManagementService awsManagementService;
     private final AWSKeyPairService awsKeyPairService;
     private final GitHubClient gitHubClient;
-    private final CreateProjectService createProjectService;
+    private final ProjectService createProjectService;
 
-    public AwsInstanceController(AWSManagementService awsManagementService, AWSKeyPairService awsKeyPairService, GitHubClient gitHubClient, CreateProjectService createProjectService) {
+    public AwsInstanceController(AWSManagementService awsManagementService, AWSKeyPairService awsKeyPairService, GitHubClient gitHubClient, ProjectService projectService) {
         this.awsManagementService = awsManagementService;
         this.awsKeyPairService = awsKeyPairService;
         this.gitHubClient = gitHubClient;
-        this.createProjectService = createProjectService;
+        this.createProjectService = projectService;
     }
 
     @SneakyThrows
