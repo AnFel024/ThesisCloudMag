@@ -2,15 +2,15 @@ server:
   port: 8081
 
 github:
-  gh-credentials: "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"
+  gh-credentials: "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"
 
 aws-credentials:
   aws-public-key: "AKIAZOW6FHBCJVU3OA7O"
   aws-private-key: "iy/pruCQO/bxsGsFIUYsPSWacDqsMlKVziXufCKO"
 
 azure-credentials:
-  azure-key-value: "Uej8Q~IXNmT.Z9fmLtAK~iiLyiHhEVE1e0Qg_aAA"
-  azure-secret-id: "1b5a8190-2ce1-496d-a31a-95b7ae4c56d7"
-  azure-subscription-id: "82a36662-bb36-43bb-a9d7-fafdf3ce29a8"
-  azure-tenant-id: "035f4085-6dc2-4119-978b-323f6cfaacc5"
-  azure-client-id: "03e43d9c-6acb-42d1-b8bb-97c38c185659"
+  azure-key-value: "AfG8Q~to7~4wUYLmvMSQnvCYQsGNC1kYWBe~gcUj"
+  azure-secret-id: "2e47b8b8-365e-4a34-9a76-f96367cb762f"
+  azure-subscription-id: "83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6"
+  azure-tenant-id: "d51388ef-6ab0-4363-9f94-d56644a45970"
+  azure-client-id: "1819a9ec-7fdb-4b66-84d5-0eb0595e3597"

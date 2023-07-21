@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class CreateDatabaseRequest {
 	@NotBlank
-  private String username;
+  	private String dbms_type;
 
 	@NotBlank
-	private String password;
+	private String name;
 }

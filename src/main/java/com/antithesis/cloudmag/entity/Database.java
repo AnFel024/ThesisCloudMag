@@ -13,33 +13,32 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(	name = "projects",
+@Table(	name = "databases",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "project_id"),
+                @UniqueConstraint(columnNames = "id"),
                 @UniqueConstraint(columnNames = "name")
         })
 @Builder
-public class Project {
+public class Database {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID project_id;
+    private UUID id;
 
     @NotBlank
     private String name;
 
     @NotBlank
-    private String repository_url;
+    private String dbms;
 
     @NotBlank
     private String creator;
 
+    @NotBlank
     private Long created_at;
 
-    private String status;
-
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(	name = "project_instances",
-            joinColumns = @JoinColumn(name = "project_id"),
+    @JoinTable(	name = "database_instances",
+            joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "instance_id"))
     private Instance instance_info = new Instance();
 }

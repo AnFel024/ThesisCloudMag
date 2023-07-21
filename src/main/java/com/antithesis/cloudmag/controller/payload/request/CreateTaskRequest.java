@@ -4,10 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class CreateTaskRequest {
 	@NotBlank
-  private String username;
+  	private String action_url;
 
 	@NotBlank
-	private String password;
+	private String name;
+
+	@NotBlank
+	private String crontab_rule;
 }

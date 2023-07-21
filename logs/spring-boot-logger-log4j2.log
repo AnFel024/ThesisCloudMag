@@ -1,0 +1,204 @@
+2023-07-21 15:56:23,712 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
+2023-07-21 15:56:23,755 INFO o.s.b.StartupInfoLogger [restartedMain] Starting CloudMagApplication using Java 17.0.8 with PID 12940 (C:\Users\anfel\IdeaProjects\ThesisCloudMag\build\classes\java\main started by anfel in C:\Users\anfel\IdeaProjects\ThesisCloudMag)
+2023-07-21 15:56:23,760 INFO o.s.b.SpringApplication [restartedMain] The following 1 profile is active: "local-win"
+2023-07-21 15:56:23,819 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-07-21 15:56:23,819 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-07-21 15:56:24,576 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-07-21 15:56:24,775 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 192 ms. Found 7 JPA repository interfaces.
+2023-07-21 15:56:25,606 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8088 (http)
+2023-07-21 15:56:25,615 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8088"]
+2023-07-21 15:56:25,616 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2023-07-21 15:56:25,616 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-07-21 15:56:25,714 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2023-07-21 15:56:25,714 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 1894 ms
+2023-07-21 15:56:25,876 INFO o.h.j.i.u.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-07-21 15:56:25,959 INFO o.h.Version [restartedMain] HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-07-21 15:56:26,309 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2023-07-21 15:56:27,203 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@58b734c6
+2023-07-21 15:56:27,206 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2023-07-21 15:56:27,330 INFO o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2023-07-21 15:56:32,186 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [restartedMain] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-07-21 15:56:32,197 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-07-21 15:56:33,981 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-07-21 15:56:34,162 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4d24cab, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@24162581, org.springframework.security.web.context.SecurityContextHolderFilter@51c4f02a, org.springframework.security.web.header.HeaderWriterFilter@42a78a1b, org.springframework.web.filter.CorsFilter@45eb3dc6, org.springframework.security.web.authentication.logout.LogoutFilter@6bd134d5, com.antithesis.cloudmag.configuration.security.jwt.AuthTokenFilter@711e6db4, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2e8f5104, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6d7c40ab, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@22e379cf, org.springframework.security.web.session.SessionManagementFilter@60753bfe, org.springframework.security.web.access.ExceptionTranslationFilter@5e5598d3, org.springframework.security.web.access.intercept.AuthorizationFilter@4bcd653d]
+2023-07-21 15:56:34,383 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2023-07-21 15:56:34,460 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8088"]
+2023-07-21 15:56:34,477 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port(s): 8088 (http) with context path ''
+2023-07-21 15:56:34,485 INFO o.s.b.StartupInfoLogger [restartedMain] Started CloudMagApplication in 11.235 seconds (process running for 12.146)
+2023-07-21 15:58:24,009 INFO o.a.j.l.DirectJDKLog [http-nio-8088-exec-4] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-21 15:58:24,010 INFO o.s.w.s.FrameworkServlet [http-nio-8088-exec-4] Initializing Servlet 'dispatcherServlet'
+2023-07-21 15:58:24,011 INFO o.s.w.s.FrameworkServlet [http-nio-8088-exec-4] Completed initialization in 1 ms
+2023-07-21 15:58:45,275 INFO c.a.c.u.l.ClientLogger [http-nio-8088-exec-5] Azure Identity => EnvironmentCredential invoking ClientSecretCredential
+2023-07-21 15:58:48,598 INFO c.a.c.u.l.ClientLogger [ForkJoinPool.commonPool-worker-1] Azure Identity => getToken() result for scopes [https://management.core.windows.net//.default]: SUCCESS
+2023-07-21 15:58:48,600 INFO c.a.c.u.l.LoggingEventBuilder [ForkJoinPool.commonPool-worker-1] {"az.sdk.message":"Acquired a new access token."}
+2023-07-21 15:58:48,602 INFO c.a.c.u.l.LoggingEventBuilder [ForkJoinPool.commonPool-worker-1] {"az.sdk.message":"HTTP request","method":"PUT","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourcegroups/test-5group?api-version=2022-09-01","tryCount":"1","contentLength":21}
+2023-07-21 15:58:50,708 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-2] {"az.sdk.message":"HTTP response","contentLength":"219","statusCode":201,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourcegroups/test-5group?api-version=2022-09-01","durationMs":2107}
+2023-07-21 15:58:50,755 INFO c.a.c.u.l.LoggingEventBuilder [parallel-3] {"az.sdk.message":"HTTP request","method":"PUT","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/publicIPAddresses/pip5720208e?api-version=2022-11-01","tryCount":"1","contentLength":92}
+2023-07-21 15:58:50,764 INFO c.a.c.u.l.LoggingEventBuilder [parallel-2] {"az.sdk.message":"HTTP request","method":"PUT","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/virtualNetworks/vnet744115f7d8?api-version=2022-11-01","tryCount":"1","contentLength":205}
+2023-07-21 15:58:51,882 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-2] {"az.sdk.message":"HTTP response","contentLength":"631","statusCode":201,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/publicIPAddresses/pip5720208e?api-version=2022-11-01","durationMs":1126}
+2023-07-21 15:58:52,017 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"1013","statusCode":201,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/virtualNetworks/vnet744115f7d8?api-version=2022-11-01","durationMs":1252}
+2023-07-21 15:58:52,987 INFO c.a.c.u.l.LoggingEventBuilder [parallel-4] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Network/locations/eastus/operations/eb6ef693-f571-40de-b90e-285c15aa845f?api-version=2022-11-01","tryCount":"1","contentLength":0}
+2023-07-21 15:58:53,142 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-2] {"az.sdk.message":"HTTP response","contentLength":"23","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Network/locations/eastus/operations/eb6ef693-f571-40de-b90e-285c15aa845f?api-version=2022-11-01","durationMs":154}
+2023-07-21 15:58:55,031 INFO c.a.c.u.l.LoggingEventBuilder [parallel-5] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Network/locations/eastus/operations/57b0d9bd-6585-45d1-abf1-d3939d40ef22?api-version=2022-11-01","tryCount":"1","contentLength":0}
+2023-07-21 15:58:55,155 INFO c.a.c.u.l.LoggingEventBuilder [parallel-6] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Network/locations/eastus/operations/eb6ef693-f571-40de-b90e-285c15aa845f?api-version=2022-11-01","tryCount":"1","contentLength":0}
+2023-07-21 15:58:55,185 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"22","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Network/locations/eastus/operations/57b0d9bd-6585-45d1-abf1-d3939d40ef22?api-version=2022-11-01","durationMs":153}
+2023-07-21 15:58:55,190 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/virtualNetworks/vnet744115f7d8?api-version=2022-11-01","tryCount":"1","contentLength":0}
+2023-07-21 15:58:55,387 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-2] {"az.sdk.message":"HTTP response","contentLength":"22","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Network/locations/eastus/operations/eb6ef693-f571-40de-b90e-285c15aa845f?api-version=2022-11-01","durationMs":231}
+2023-07-21 15:58:55,389 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-2] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/publicIPAddresses/pip5720208e?api-version=2022-11-01","tryCount":"1","contentLength":0}
+2023-07-21 15:58:55,556 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"632","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/publicIPAddresses/pip5720208e?api-version=2022-11-01","durationMs":167}
+2023-07-21 15:58:55,673 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"1015","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/virtualNetworks/vnet744115f7d8?api-version=2022-11-01","durationMs":481}
+2023-07-21 15:58:55,681 INFO c.a.c.u.l.LoggingEventBuilder [parallel-7] {"az.sdk.message":"HTTP request","method":"PUT","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/networkInterfaces/nictest-5a1e547969?api-version=2022-11-01","tryCount":"1","contentLength":507}
+2023-07-21 15:58:56,351 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-2] {"az.sdk.message":"HTTP response","contentLength":"1653","statusCode":201,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/networkInterfaces/nictest-5a1e547969?api-version=2022-11-01","durationMs":670}
+2023-07-21 15:58:56,388 INFO c.a.c.u.l.LoggingEventBuilder [parallel-8] {"az.sdk.message":"HTTP request","method":"PUT","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Compute/virtualMachines/test-5?api-version=2023-03-01","tryCount":"1","contentLength":1523}
+2023-07-21 15:58:57,859 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"2718","statusCode":201,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Compute/virtualMachines/test-5?api-version=2023-03-01","durationMs":1470}
+2023-07-21 15:59:07,912 INFO c.a.c.u.l.LoggingEventBuilder [parallel-9] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Compute/locations/eastus/operations/d67a47f8-5c57-4a51-a868-ea0ede98a991?p=REDACTED&api-version=2023-03-01","tryCount":"1","contentLength":0}
+2023-07-21 15:59:08,096 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"134","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Compute/locations/eastus/operations/d67a47f8-5c57-4a51-a868-ea0ede98a991?p=REDACTED&api-version=2023-03-01","durationMs":184}
+2023-07-21 15:59:12,111 INFO c.a.c.u.l.LoggingEventBuilder [parallel-10] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Compute/locations/eastus/operations/d67a47f8-5c57-4a51-a868-ea0ede98a991?p=REDACTED&api-version=2023-03-01","tryCount":"1","contentLength":0}
+2023-07-21 15:59:31,265 WARN r.u.Loggers$Slf4JLogger [reactor-http-nio-2] [a9ff0976-6, L:/192.168.5.114:55657 - R:management.azure.com/20.40.227.150:443] The connection observed an error
+java.net.SocketException: Connection reset
+	at sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:394) ~[?:?]
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:426) ~[?:?]
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:259) ~[netty-buffer-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132) ~[netty-buffer-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:357) ~[netty-transport-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151) ~[netty-transport-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788) ~[netty-transport-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724) ~[netty-transport-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650) ~[netty-transport-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562) ~[netty-transport-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997) ~[netty-common-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74) ~[netty-common-4.1.89.Final.jar:4.1.89.Final]
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.89.Final.jar:4.1.89.Final]
+	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+2023-07-21 15:59:31,274 WARN c.a.c.u.l.ClientLogger [reactor-http-nio-2] <-- HTTP FAILED: 
+Connection reset
+2023-07-21 15:59:32,113 INFO c.a.c.u.l.LoggingEventBuilder [parallel-11] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Compute/locations/eastus/operations/d67a47f8-5c57-4a51-a868-ea0ede98a991?p=REDACTED&api-version=2023-03-01","tryCount":"2","contentLength":0}
+2023-07-21 15:59:32,259 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"184","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/providers/Microsoft.Compute/locations/eastus/operations/d67a47f8-5c57-4a51-a868-ea0ede98a991?p=REDACTED&api-version=2023-03-01","durationMs":146}
+2023-07-21 15:59:32,264 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Compute/virtualMachines/test-5?api-version=2023-03-01","tryCount":"1","contentLength":0}
+2023-07-21 15:59:32,434 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"2964","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Compute/virtualMachines/test-5?api-version=2023-03-01","durationMs":170}
+2023-07-21 15:59:32,438 INFO c.a.c.u.l.LoggingEventBuilder [http-nio-8088-exec-5] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/networkInterfaces/nictest-5a1e547969?api-version=2022-11-01","tryCount":"1","contentLength":0}
+2023-07-21 15:59:32,719 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"1857","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/networkInterfaces/nictest-5a1e547969?api-version=2022-11-01","durationMs":280}
+2023-07-21 15:59:32,722 INFO c.a.c.u.l.LoggingEventBuilder [http-nio-8088-exec-5] {"az.sdk.message":"HTTP request","method":"GET","url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/publicIPAddresses/pip5720208e?api-version=2022-11-01","tryCount":"1","contentLength":0}
+2023-07-21 15:59:32,924 INFO c.a.c.u.l.LoggingEventBuilder [reactor-http-nio-3] {"az.sdk.message":"HTTP response","contentLength":"858","statusCode":200,"url":"https://management.azure.com/subscriptions/83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6/resourceGroups/test-5group/providers/Microsoft.Network/publicIPAddresses/pip5720208e?api-version=2022-11-01","durationMs":201}
+2023-07-21 16:00:42,205 ERROR c.a.c.c.s.j.AuthEntryPointJwt [http-nio-8088-exec-8] Unauthorized error: Full authentication is required to access this resource
+2023-07-21 16:01:14,637 ERROR c.a.c.c.s.j.AuthEntryPointJwt [http-nio-8088-exec-2] Unauthorized error: Full authentication is required to access this resource
+2023-07-21 16:01:24,002 ERROR o.a.j.l.DirectJDKLog [http-nio-8088-exec-10] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.http.converter.HttpMessageConversionException: Type definition error: [simple type, class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor]] with root cause
+com.fasterxml.jackson.databind.exc.InvalidDefinitionException: No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer (to avoid exception, disable SerializationFeature.FAIL_ON_EMPTY_BEANS) (through reference chain: com.antithesis.cloudmag.controller.payload.response.MessageResponse["data"]->java.util.ArrayList[0]->com.antithesis.cloudmag.entity.Project["instance_info"]->com.antithesis.cloudmag.entity.Instance$HibernateProxy$2D9GM57k["hibernateLazyInitializer"])
+	at com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:77) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.SerializerProvider.reportBadDefinition(SerializerProvider.java:1306) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.DatabindContext.reportBadDefinition(DatabindContext.java:408) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.impl.UnknownSerializer.failForEmpty(UnknownSerializer.java:53) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.impl.UnknownSerializer.serialize(UnknownSerializer.java:30) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:733) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:774) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:178) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:733) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:774) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:178) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serializeContents(IndexedListSerializer.java:119) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serialize(IndexedListSerializer.java:79) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer.serialize(IndexedListSerializer.java:18) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:733) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:774) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:178) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:480) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:319) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ObjectWriter$Prefetch.serialize(ObjectWriter.java:1572) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1061) ~[jackson-databind-2.14.2.jar:2.14.2]
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:103) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor.handleReturnValue(HttpEntityMethodProcessor.java:245) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:135) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:705) ~[tomcat-embed-core-10.1.5.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.0.6.jar:6.0.6]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:814) ~[tomcat-embed-core-10.1.5.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:223) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at com.antithesis.cloudmag.configuration.security.jwt.AuthTokenFilter.doFilterInternal(AuthTokenFilter.java:52) ~[main/:?]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.0.2.jar:6.0.2]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.0.6.jar:6.0.6]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:119) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:400) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:859) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1734) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.5.jar:10.1.5]
+	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+2023-07-21 16:01:24,008 ERROR c.a.c.c.s.j.AuthEntryPointJwt [http-nio-8088-exec-10] Unauthorized error: Full authentication is required to access this resource

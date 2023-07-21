@@ -1,17 +1,17 @@
 package com.antithesis.cloudmag.controller.payload.response;
 
-public class MessageResponse {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
+public class MessageResponse<T> {
+  private T data;
   private String message;
-
-  public MessageResponse(String message) {
-    this.message = message;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
+  private HttpStatus status;
 }
