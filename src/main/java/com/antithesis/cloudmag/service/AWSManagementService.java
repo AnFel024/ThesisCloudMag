@@ -3,12 +3,7 @@ package com.antithesis.cloudmag.service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ec2.Ec2Client;
-import software.amazon.awssdk.services.ec2.model.InstanceType;
-import software.amazon.awssdk.services.ec2.model.RunInstancesRequest;
-import software.amazon.awssdk.services.ec2.model.RunInstancesResponse;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import software.amazon.awssdk.services.ec2.model.*;
 
 @Service
 public class AWSManagementService {
@@ -18,17 +13,18 @@ public class AWSManagementService {
         this.ec2Client = ec2Client;
     }
 
-    public List<List<String>> generateInstance() {
+    public RunInstancesResponse generateInstance(InstanceType instanceType) {
         /*
         # AWS region id     -> us-east-1
         # Security group id ->collect sg-049be70bb05fbf786
         # AMI id            -> ami-0557a15b87f6559cf
         # Key Pair          -> THESIS_WORK_KEY_PAIR
          */
+        // TODO validar image id
         RunInstancesRequest request = RunInstancesRequest.builder()
                 .securityGroupIds("sg-049be70bb05fbf786")
                 .keyName("THESIS_WORK_KEY_PAIR")
-                .instanceType(InstanceType.T2_MICRO)
+                .instanceType(instanceType)
                 .imageId("ami-0557a15b87f6559cf")
                 .minCount(1)
                 .maxCount(1)
@@ -37,6 +33,11 @@ public class AWSManagementService {
         if (!runInstancesResponse.hasInstances()) {
             throw new RuntimeException("Fallo en la creacion de instancias");
         }
-        return runInstancesResponse.instances().stream().map(instance -> instance.networkInterfaces().stream().map(net -> net.privateIpAddress()).collect(Collectors.toList())).collect(Collectors.toList());
+        return runInstancesResponse;
+    }
+
+    public DescribeInstancesResponse validateInstanceHealth() {
+        DescribeInstancesResponse describeInstancesResponse = ec2Client.describeInstances();
+        return describeInstancesResponse;
     }
 }

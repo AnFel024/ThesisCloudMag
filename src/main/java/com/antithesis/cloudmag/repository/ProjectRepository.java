@@ -11,4 +11,8 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query("SELECT p FROM Project p WHERE p.creator = ?1")
     List<Project> findByUserOwner(String userOwner);
+
+    void deleteByName(String project_name);
+
+    Boolean existsByName(String email);
 }

@@ -25,7 +25,7 @@ public class GitHubClient {
     }
 
     @SneakyThrows
-    public String createRepository(String repositoryName) {
+    public GitHubResponse createRepository(String repositoryName) {
         URI targetURI = new URI(TARGET_URL);
         GitHubRequest body = GitHubRequest.builder()
                 .name(repositoryName)
@@ -38,7 +38,6 @@ public class GitHubClient {
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        GitHubResponse clientResponse = objectMapper.readValue(response.body(), GitHubResponse.class);
-        return clientResponse.toString();
+        return objectMapper.readValue(response.body(), GitHubResponse.class);
     }
 }
