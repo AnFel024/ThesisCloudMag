@@ -10,6 +10,10 @@ pipeline {
     stage('build') {
       steps {
         sh 'echo hola'
+        withGradle() {
+          sh 'gradle clean'
+        }
+
       }
     }
 
