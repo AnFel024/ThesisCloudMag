@@ -1,5 +1,7 @@
 package com.antithesis.cloudmag.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,27 +11,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(	name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "id"),
                 @UniqueConstraint(columnNames = "email")
         })
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class User {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @NotBlank
     @Size(max = 20)
-    private String username;
+    private String id;
 
     @NotBlank
     @Size(max = 50)
@@ -42,12 +41,12 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "roleId"))
+    private Set<RoleEntity> roleEntities;
 
-    public User(String username, String email, String password) {
-        this.username = username;
+    public UserEntity(String id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
     }

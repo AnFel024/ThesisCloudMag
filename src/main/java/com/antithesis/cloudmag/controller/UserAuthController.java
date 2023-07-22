@@ -1,7 +1,7 @@
 package com.antithesis.cloudmag.controller;
 
-import com.antithesis.cloudmag.controller.payload.request.LoginRequest;
-import com.antithesis.cloudmag.controller.payload.request.SignupRequest;
+import com.antithesis.cloudmag.controller.payload.request.LoginDto;
+import com.antithesis.cloudmag.controller.payload.request.SignupDto;
 import com.antithesis.cloudmag.controller.payload.response.JwtResponse;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
 import com.antithesis.cloudmag.service.UserService;
@@ -22,14 +22,14 @@ public class UserAuthController {
     private final UserService userService;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        MessageResponse<JwtResponse> messageResponse = userService.createSignInPetition(loginRequest);
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
+        MessageResponse<JwtResponse> messageResponse = userService.createSignInPetition(loginDto);
         return ResponseUtils.validateResponse(messageResponse);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws RuntimeException {
-        MessageResponse<?> messageResponse = userService.createUser(signUpRequest);
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupDto signUpDto) throws RuntimeException {
+        MessageResponse<?> messageResponse = userService.createUser(signUpDto);
         return ResponseUtils.validateResponse(messageResponse);
     }
 }

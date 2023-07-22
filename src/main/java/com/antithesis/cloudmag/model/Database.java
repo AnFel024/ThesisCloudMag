@@ -1,23 +1,28 @@
 package com.antithesis.cloudmag.model;
 
+import com.antithesis.cloudmag.entity.InstanceEntity;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProjectData {
-    private Integer id;
-    private String projectName;
-    private String repositoryUrl;
-    private String creator;
-    private LocalDateTime createdAt;
+public class Database {
+    private UUID id;
+    private String name;
+    private String dbms;
+    private Long createdAt;
+    private Instance instanceInfo;
+    private User creator;
 }
+

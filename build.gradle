@@ -23,11 +23,11 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation('org.springframework.boot:spring-boot-starter-web')
     implementation 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
     // Guava
     implementation 'com.google.guava:guava:31.1-jre'
@@ -72,16 +72,21 @@ dependencies {
     // https://mvnrepository.com/artifact/com.azure.resourcemanager/azure-resourcemanager-resources
     implementation 'com.azure.resourcemanager:azure-resourcemanager:2.28.0'
 
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
     //SSH
     implementation 'com.jcraft:jsch:0.1.55'
 
     // Validations
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '8.0.0.Final'
 
-    compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

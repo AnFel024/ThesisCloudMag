@@ -6,7 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class SignupRequest {
+public class SignupDto {
   @NotBlank
   @Size(max = 50)
   @Email

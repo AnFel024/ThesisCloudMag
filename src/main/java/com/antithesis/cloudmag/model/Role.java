@@ -1,6 +1,8 @@
-package com.antithesis.cloudmag.entity;
+package com.antithesis.cloudmag.model;
 
 import com.antithesis.cloudmag.constant.RoleTypes;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,15 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "roles")
 @Builder
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
     private RoleTypes name;
 }
