@@ -14,6 +14,10 @@ pipeline {
           sh './gradlew clean'
         }
 
+        withGradle() {
+          sh './gradlew bootJar'
+        }
+
       }
     }
 
