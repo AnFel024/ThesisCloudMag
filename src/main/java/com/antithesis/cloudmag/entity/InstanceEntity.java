@@ -11,11 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(	name = "instances",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "instanceId"),
-                @UniqueConstraint(columnNames = "name")
-        })
+@Table(	name = "instances")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,7 +19,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class InstanceEntity {
     @Id
-    private String instanceId;
+    private String id;
 
     @Size(max = 20)
     private String name;

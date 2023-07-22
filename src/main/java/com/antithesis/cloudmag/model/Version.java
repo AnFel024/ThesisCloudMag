@@ -19,12 +19,12 @@ import java.util.UUID;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Version {
-    private UUID versionId;
+    private UUID id;
     private Long createdAt;
     private String name;
     private String description;
     private String tagName;
-    private Project projectId;
     private User creator;
+    private Project projectInfo;
 }
 

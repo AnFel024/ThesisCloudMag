@@ -5,6 +5,8 @@ import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
 import com.antithesis.cloudmag.entity.UserEntity;
 import com.antithesis.cloudmag.entity.VersionEntity;
+import com.antithesis.cloudmag.mapper.VersionMapper;
+import com.antithesis.cloudmag.model.Version;
 import com.antithesis.cloudmag.repository.UserRepository;
 import com.antithesis.cloudmag.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -23,17 +26,16 @@ public class VersionService {
 
     private final VersionRepository versionRepository;
     private final UserRepository userRepository;
+    private final VersionMapper versionMapper;
     private final DogStatsdClient dogStatsdClient;
 
     public MessageResponse<?> createVersion(CreateVersionDto createVersionDto) {
-        UserEntity userEntity = userRepository.findById(createVersionDto.getUsername())
-                .orElseThrow(() -> new RuntimeException("Error: User is not found."));
         VersionEntity versionEntity = VersionEntity.builder()
                 .name(createVersionDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .creator(userEntity)
                 .description(createVersionDto.getDescription())
                 .tagName(createVersionDto.getTag())
+                .creator(userRepository.findById(createVersionDto.getUsername()).get())
                 .build();
         versionRepository.save(versionEntity);
         return MessageResponse.builder()
@@ -43,8 +45,13 @@ public class VersionService {
                 .build();
     }
 
-    public MessageResponse listVersions(String userOwner) {
+    public MessageResponse<List<Version>> listVersions(String userOwner) {
         // TODO pasar long fecha a localdatetime
-        return MessageResponse.builder().status(HttpStatus.OK).data(versionRepository.findAll()).build();
+        return MessageResponse.<List<Version>>builder()
+                .status(HttpStatus.OK)
+                .data(versionRepository.findAll().stream()
+                        .map(versionMapper::mapToVersion)
+                        .toList())
+                .build();
     }
 }

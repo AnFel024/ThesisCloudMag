@@ -15,17 +15,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(	name = "databases",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "databaseId"),
-                @UniqueConstraint(columnNames = "name")
-        })
+@Table(	name = "databases")
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DatabaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID databaseId;
+    private UUID id;
 
     @NotBlank
     private String name;
@@ -43,9 +39,9 @@ public class DatabaseEntity {
     private InstanceEntity instanceInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(	name = "database_user",
-            joinColumns = @JoinColumn(name = "databaseId"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @JoinTable(	name = "database_users",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId"))
     private UserEntity creator;
 }
 

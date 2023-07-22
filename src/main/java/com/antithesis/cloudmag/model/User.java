@@ -24,10 +24,5 @@ public class User {
     private String id;
     private String email;
     private String password;
-    private Set<RoleEntity> roleEntities;
-    private Set<Database> databasesCreated;
-    private Set<Deploy> deploysCreated;
-    private Set<Project> projectsCreated;
-    private Set<Task> tasksCreated;
-    private Set<Version> versionsCreated;
+    private Set<Role> roleEntities;
 }

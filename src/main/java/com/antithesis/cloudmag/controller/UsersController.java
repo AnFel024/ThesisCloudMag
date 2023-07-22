@@ -23,7 +23,7 @@ public class UsersController {
     }
 
     @DeleteMapping("/user/{user_id}/name/{user_name}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long user_id) {
+    public ResponseEntity<?> deleteUser(@PathVariable String user_id) {
         return ResponseUtils.validateResponse(userService.deleteUser(user_id));
     }
 }

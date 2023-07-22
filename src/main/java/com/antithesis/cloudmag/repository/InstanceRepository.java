@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InstanceRepository extends JpaRepository<InstanceEntity, Long> {
+public interface InstanceRepository extends JpaRepository<InstanceEntity, String> {
     List<InstanceEntity> findAll();
 }

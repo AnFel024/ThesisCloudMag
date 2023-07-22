@@ -86,17 +86,17 @@ public class ProjectService {
         ProjectEntity projectEntity = ProjectEntity.builder()
                 .name(createAppDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .creator(userEntity)
                 .repositoryUrl(repositoryUrl)
                 .instanceInfo(instanceEntity)
                 .status("PENDING")
+                .creator(userEntity)
                 .build();
         projectRepository.save(projectEntity);
     }
 
     private InstanceEntity getInstance(RunInstancesResponse runInstancesResponse) {
         InstanceEntity instanceEntity = InstanceEntity.builder()
-                .instanceId(runInstancesResponse.instances().get(0).instanceId())
+                .id(runInstancesResponse.instances().get(0).instanceId())
                 .hostUrl(runInstancesResponse.instances().get(0).publicDnsName())
                 .provider("AWS")
                 .type(runInstancesResponse.instances().get(0).instanceTypeAsString())
@@ -108,7 +108,7 @@ public class ProjectService {
 
     private InstanceEntity getInstance(VirtualMachine virtualMachine) {
         InstanceEntity instanceEntity = InstanceEntity.builder()
-                .instanceId(virtualMachine.id())
+                .id(virtualMachine.id())
                 .hostUrl(virtualMachine.getPrimaryPublicIPAddress().ipAddress())
                 .provider("AZURE")
                 .type(virtualMachine.size().toString())
@@ -129,8 +129,8 @@ public class ProjectService {
         DatabaseEntity project = DatabaseEntity.builder()
                 .name(createDatabaseDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .creator(userEntity)
                 .dbms(createDatabaseDto.getDbms_type())
+                .creator(userEntity)
                 .build();
         databaseRepository.save(project);
         return MessageResponse.builder()
@@ -144,7 +144,7 @@ public class ProjectService {
     public MessageResponse<List<Project>> listProjects(String userOwner) {
         // TODO pasar long fecha a localdatetime
         dogStatsdClient.sendMetric();
-        List<ProjectEntity> allByCreator = projectRepository.findAllByCreator(userRepository.findById(userOwner).orElseThrow());
+        List<ProjectEntity> allByCreator = projectRepository.findAll();
         List<Project> projects = allByCreator.stream().map(projectMapper::mapToProject).toList();
         return MessageResponse.<List<Project>>builder()
                 .data(projects)
@@ -184,9 +184,9 @@ public class ProjectService {
         TaskEntity project = TaskEntity.builder()
                 .name(createTaskDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .creator(userEntity)
                 .concurrentUrl(createTaskDto.getAction_url())
                 .scheduledTime(createTaskDto.getCrontab_rule())
+                .creator(userEntity)
                 .build();
         taskRepository.save(project);
         return MessageResponse.builder()

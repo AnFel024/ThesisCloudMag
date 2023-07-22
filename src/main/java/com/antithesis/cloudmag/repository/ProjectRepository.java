@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
+public interface ProjectRepository extends JpaRepository<ProjectEntity, UUID> {
     //@Query("SELECT p FROM ProjectEntity p WHERE p.creator = ?1")
-    List<ProjectEntity> findAllByCreator(UserEntity userOwner);
+    List<ProjectEntity> findAll();
 
     void deleteByName(String project_name);
 

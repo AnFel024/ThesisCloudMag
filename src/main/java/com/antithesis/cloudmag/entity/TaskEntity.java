@@ -15,17 +15,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(	name = "tasks",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "taskId"),
-                @UniqueConstraint(columnNames = "name")
-        })
+@Table(	name = "tasks")
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID taskId;
+    private UUID id;
 
     private Long createdAt;
 
@@ -39,9 +35,9 @@ public class TaskEntity {
     private String scheduledTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(	name = "task_user",
-            joinColumns = @JoinColumn(name = "taskId"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @JoinTable(	name = "task_users",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "taskId"))
     private UserEntity creator;
 }
 

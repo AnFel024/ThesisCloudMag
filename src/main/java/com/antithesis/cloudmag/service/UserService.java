@@ -121,7 +121,7 @@ public class UserService {
                 .build();
     }
 
-    public MessageResponse<?> deleteUser(Long user_id) {
+    public MessageResponse<?> deleteUser(String user_id) {
         userRepository.deleteById(user_id);
         return MessageResponse.builder()
                 .message("Usuario borrado correctamente")

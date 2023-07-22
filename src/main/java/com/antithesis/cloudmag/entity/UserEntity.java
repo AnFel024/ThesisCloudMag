@@ -45,36 +45,6 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Set<RoleEntity> roleEntities;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(	name = "user_database",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "databaseId"))
-    private Set<DatabaseEntity> databasesCreated;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(	name = "user_deploys",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "deployId"))
-    private Set<DeployEntity> deploysCreated;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(	name = "user_projects",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "projectId"))
-    private Set<ProjectEntity> projectsCreated;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(	name = "user_tasks",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "taskId"))
-    private Set<TaskEntity> tasksCreated;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(	name = "user_tasks",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "versionId"))
-    private Set<VersionEntity> versionsCreated;
-
     public UserEntity(String id, String email, String password) {
         this.id = id;
         this.email = email;

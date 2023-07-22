@@ -9,23 +9,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(	name = "projects",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "projectId"),
-                @UniqueConstraint(columnNames = "name")
-        })
+@Table(	name = "projects")
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID projectId;
+    private UUID id;
 
     @NotBlank
     private String name;
@@ -39,14 +36,14 @@ public class ProjectEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "project_instances",
-            joinColumns = @JoinColumn(name = "projectId"),
+            joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "instanceId"))
     private InstanceEntity instanceInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(	name = "project_user",
-            joinColumns = @JoinColumn(name = "projectId"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @JoinTable(	name = "project_users",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId"))
     private UserEntity creator;
 }
 

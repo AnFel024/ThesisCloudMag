@@ -14,35 +14,32 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(	name = "deploys",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "deployId")
-        })
+@Table(	name = "deploys")
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DeployEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID deployId;
+    private UUID id;
 
     private Long createdAt;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "version_instances",
-            joinColumns = @JoinColumn(name = "deployId"),
+            joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "instanceId"))
     private InstanceEntity instanceInfo;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "deploy_version",
-            joinColumns = @JoinColumn(name = "deployId"),
+            joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "versionId"))
     private VersionEntity versionInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(	name = "deploy_user",
-            joinColumns = @JoinColumn(name = "deployId"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @JoinTable(	name = "deploy_users",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId"))
     private UserEntity creator;
 }
 

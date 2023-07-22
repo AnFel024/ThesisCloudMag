@@ -5,8 +5,15 @@ import com.antithesis.cloudmag.model.Database;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+import java.util.Set;
+
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {
+        InstanceMapper.class,
+        UserMapper.class
+})
 public interface DatabaseMapper {
 
     Database mapToDatabase(DatabaseEntity databaseEntity);
+
+    Set<Database> mapToDatabaseSet(Set<DatabaseEntity> databaseEntitySet);
 }

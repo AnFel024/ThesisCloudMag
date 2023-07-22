@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Instance {
-    private String instanceId;
+    private String id;
     private String name;
     private String type;
     private String provider;

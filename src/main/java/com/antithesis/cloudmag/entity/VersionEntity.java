@@ -9,23 +9,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(	name = "versions",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "versionId"),
-                @UniqueConstraint(columnNames = "name")
-        })
+@Table(	name = "versions")
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class VersionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID versionId;
+    private UUID id;
 
     private Long createdAt;
 
@@ -38,16 +35,16 @@ public class VersionEntity {
     @NotBlank
     private String tagName;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(	name = "version_projects",
-            joinColumns = @JoinColumn(name = "versionId"),
-            inverseJoinColumns = @JoinColumn(name = "projectId"))
-    private ProjectEntity projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(	name = "version_users",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId"))
+    private UserEntity creator;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(	name = "version_user",
-            joinColumns = @JoinColumn(name = "versionId"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
-    private UserEntity creator;
+    @JoinTable(	name = "version_projects",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "projectId"))
+    private ProjectEntity projectInfo;
 }
 
