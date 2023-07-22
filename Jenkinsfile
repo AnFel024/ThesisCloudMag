@@ -11,7 +11,7 @@ pipeline {
       steps {
         sh 'echo hola'
         withGradle() {
-          sh 'gradle clean'
+          sh './gradlew clean'
         }
 
       }
