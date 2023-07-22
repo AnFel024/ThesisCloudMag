@@ -21,5 +21,11 @@ pipeline {
       }
     }
 
+    stage('docker') {
+      steps {
+        sh 'docker build -t anfel024/tesis-hub:spring-docker-3 .'
+      }
+    }
+
   }
 }
