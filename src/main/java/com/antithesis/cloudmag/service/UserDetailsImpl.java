@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.antithesis.cloudmag.entity.User;
+import com.antithesis.cloudmag.entity.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UserDetailsImpl implements UserDetails {
   private static final long serialVersionUID = 1L;
 
-  private final Long id;
+  private final String id;
 
   private final String email;
 
@@ -24,23 +24,23 @@ public class UserDetailsImpl implements UserDetails {
 
   private Collection<? extends GrantedAuthority> authorities;
 
-  public UserDetailsImpl(Long id, String email, String password,
-      Collection<? extends GrantedAuthority> authorities) {
+  public UserDetailsImpl(String id, String email, String password,
+                         Collection<? extends GrantedAuthority> authorities) {
     this.id = id;
     this.email = email;
     this.password = password;
     this.authorities = authorities;
   }
 
-  public static UserDetailsImpl build(User user) {
-    List<GrantedAuthority> authorities = user.getRoles().stream()
+  public static UserDetailsImpl build(UserEntity userEntity) {
+    List<GrantedAuthority> authorities = userEntity.getRoleEntities().stream()
         .map(role -> new SimpleGrantedAuthority(role.getName().name()))
         .collect(Collectors.toList());
 
     return new UserDetailsImpl(
-        user.getId(), 
-        user.getEmail(),
-        user.getPassword(), 
+        userEntity.getId(),
+        userEntity.getEmail(),
+        userEntity.getPassword(),
         authorities);
   }
 
@@ -49,7 +49,7 @@ public class UserDetailsImpl implements UserDetails {
     return authorities;
   }
 
-  public Long getId() {
+  public String getUsername() {
     return id;
   }
 
@@ -60,11 +60,6 @@ public class UserDetailsImpl implements UserDetails {
   @Override
   public String getPassword() {
     return password;
-  }
-
-  @Override
-  public String getUsername() {
-    return null;
   }
 
   @Override

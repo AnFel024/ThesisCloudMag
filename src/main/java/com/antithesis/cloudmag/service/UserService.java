@@ -2,12 +2,14 @@ package com.antithesis.cloudmag.service;
 
 import com.antithesis.cloudmag.configuration.security.jwt.JwtUtils;
 import com.antithesis.cloudmag.constant.RoleTypes;
-import com.antithesis.cloudmag.controller.payload.request.LoginRequest;
-import com.antithesis.cloudmag.controller.payload.request.SignupRequest;
+import com.antithesis.cloudmag.controller.payload.request.LoginDto;
+import com.antithesis.cloudmag.controller.payload.request.SignupDto;
 import com.antithesis.cloudmag.controller.payload.response.JwtResponse;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
-import com.antithesis.cloudmag.entity.Role;
-import com.antithesis.cloudmag.entity.User;
+import com.antithesis.cloudmag.entity.RoleEntity;
+import com.antithesis.cloudmag.entity.UserEntity;
+import com.antithesis.cloudmag.mapper.UserMapper;
+import com.antithesis.cloudmag.model.User;
 import com.antithesis.cloudmag.repository.RoleRepository;
 import com.antithesis.cloudmag.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +36,10 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
+    private final UserMapper userMapper;
 
-    public MessageResponse<?> createUser(SignupRequest signUpRequest) throws RuntimeException {
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+    public MessageResponse<?> createUser(SignupDto signUpDto) throws RuntimeException {
+        if (userRepository.existsByEmail(signUpDto.getEmail())) {
             return MessageResponse.builder()
                     .message("Error: Email is already in use!")
                     .status(HttpStatus.BAD_REQUEST)
@@ -44,40 +47,40 @@ public class UserService {
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getEmail(), signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+        UserEntity userEntity = new UserEntity(signUpDto.getEmail(), signUpDto.getEmail(),
+                encoder.encode(signUpDto.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<Role> roles = new HashSet<>();
+        Set<String> strRoles = signUpDto.getRole();
+        Set<RoleEntity> roleEntities = new HashSet<>();
 
         if (strRoles == null) {
-            Role userRole = roleRepository.findByName(RoleTypes.ADMINISTRATOR)
+            RoleEntity userRoleEntity = roleRepository.findByName(RoleTypes.ADMINISTRATOR)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
+            roleEntities.add(userRoleEntity);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
-                        Role adminRole = roleRepository.findByName(RoleTypes.ADMINISTRATOR)
+                        RoleEntity adminRoleEntity = roleRepository.findByName(RoleTypes.ADMINISTRATOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
+                        roleEntities.add(adminRoleEntity);
                         break;
                     case "mod":
-                        Role modRole = roleRepository.findByName(RoleTypes.CONTRIBUTOR)
+                        RoleEntity modRoleEntity = roleRepository.findByName(RoleTypes.CONTRIBUTOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole);
+                        roleEntities.add(modRoleEntity);
 
                         break;
                     default:
-                        Role userRole = roleRepository.findByName(RoleTypes.VIEWER)
+                        RoleEntity userRoleEntity = roleRepository.findByName(RoleTypes.VIEWER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
+                        roleEntities.add(userRoleEntity);
                 }
             });
         }
 
-        user.setRoles(roles);
-        userRepository.save(user);
+        userEntity.setRoleEntities(roleEntities);
+        userRepository.save(userEntity);
 
         return MessageResponse.builder()
                 .message("User registered successfully!")
@@ -85,9 +88,9 @@ public class UserService {
                 .build();
     }
 
-    public MessageResponse<JwtResponse> createSignInPetition(LoginRequest loginRequest) throws RuntimeException {
+    public MessageResponse<JwtResponse> createSignInPetition(LoginDto loginDto) throws RuntimeException {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
@@ -100,7 +103,6 @@ public class UserService {
         return MessageResponse.<JwtResponse>builder()
                 .data(JwtResponse.builder()
                         .token(jwt)
-                        .id(userDetails.getId())
                         .username(userDetails.getEmail())
                         .email(userDetails.getEmail())
                         .roles(roles)
@@ -110,8 +112,11 @@ public class UserService {
     }
 
     public MessageResponse<List<User>> getAllUsers() {
+        List<User> users = userRepository.findAll().stream()
+                .map(userMapper::mapToUser)
+                .collect(Collectors.toList());
         return MessageResponse.<List<User>>builder()
-                .data(userRepository.findAll())
+                .data(users)
                 .status(HttpStatus.OK)
                 .build();
     }

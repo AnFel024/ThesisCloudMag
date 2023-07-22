@@ -3,7 +3,7 @@ package com.antithesis.cloudmag.configuration;
 import com.antithesis.cloudmag.configuration.security.jwt.AuthEntryPointJwt;
 import com.antithesis.cloudmag.configuration.security.jwt.AuthTokenFilter;
 import com.antithesis.cloudmag.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,14 +17,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.inject.Inject;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class WebSecurityConfig {
-  @Autowired
-  UserDetailsServiceImpl userDetailsService;
+  private final UserDetailsServiceImpl userDetailsService;
 
-  @Autowired
-  private AuthEntryPointJwt unauthorizedHandler;
+  private final AuthEntryPointJwt unauthorizedHandler;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {

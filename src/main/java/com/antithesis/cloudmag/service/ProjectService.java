@@ -3,18 +3,18 @@ package com.antithesis.cloudmag.service;
 import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.GitHubClient;
 import com.antithesis.cloudmag.client.responses.GitHubResponse;
-import com.antithesis.cloudmag.controller.payload.request.CreateAppRequest;
-import com.antithesis.cloudmag.controller.payload.request.CreateDatabaseRequest;
-import com.antithesis.cloudmag.controller.payload.request.CreateTaskRequest;
+import com.antithesis.cloudmag.controller.payload.request.CreateAppDto;
+import com.antithesis.cloudmag.controller.payload.request.CreateDatabaseDto;
+import com.antithesis.cloudmag.controller.payload.request.CreateTaskDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
-import com.antithesis.cloudmag.entity.Database;
-import com.antithesis.cloudmag.entity.Instance;
-import com.antithesis.cloudmag.entity.Project;
-import com.antithesis.cloudmag.entity.Task;
-import com.antithesis.cloudmag.repository.DatabaseRepository;
-import com.antithesis.cloudmag.repository.InstanceRepository;
-import com.antithesis.cloudmag.repository.ProjectRepository;
-import com.antithesis.cloudmag.repository.TaskRepository;
+import com.antithesis.cloudmag.entity.*;
+import com.antithesis.cloudmag.mapper.DatabaseMapper;
+import com.antithesis.cloudmag.mapper.ProjectMapper;
+import com.antithesis.cloudmag.mapper.TaskMapper;
+import com.antithesis.cloudmag.model.Database;
+import com.antithesis.cloudmag.model.Project;
+import com.antithesis.cloudmag.model.Task;
+import com.antithesis.cloudmag.repository.*;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
@@ -37,100 +37,106 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final DatabaseRepository databaseRepository;
     private final InstanceRepository instanceRepository;
+    private final UserRepository userRepository;
     private final GitHubClient gitHubClient;
     private final AWSManagementService awsManagementService;
     private final AzureManagementService azureManagementService;
     private final TaskRepository taskRepository;
+    private final ProjectMapper projectMapper;
     private final DogStatsdClient dogStatsdClient;
+    private final DatabaseMapper databaseMapper;
+    private final TaskMapper taskMapper;
 
-    public MessageResponse<?> createProject(CreateAppRequest createAppRequest, String userOwner) {
-        if (projectRepository.existsByName(createAppRequest.getName())) {
+    public MessageResponse<?> createProject(CreateAppDto createAppDto) {
+        if (projectRepository.existsByName(createAppDto.getName())) {
             return MessageResponse.builder()
                     .message("Error: Project name already exist!")
                     .status(HttpStatus.BAD_REQUEST)
                     .build();
         }
-        Instance instance;
+        InstanceEntity instanceEntity;
 
-        if (createAppRequest.getCloud_provider().equals("AWS")) {
+        if (createAppDto.getCloud_provider().equals("AWS")) {
             RunInstancesResponse runInstancesResponse = awsManagementService.generateInstance(
                     InstanceType.fromValue(
-                            createAppRequest.getInstance_type()
+                            createAppDto.getInstance_type()
                     ));
-            instance = getInstance(runInstancesResponse);
+            instanceEntity = getInstance(runInstancesResponse);
         }
         else {
             VirtualMachine virtualMachine = azureManagementService.createVirtualMachine(
-                    createAppRequest.getName());
-            instance = getInstance(virtualMachine);
+                    createAppDto.getName());
+            instanceEntity = getInstance(virtualMachine);
         }
 
         GitHubResponse gitHubClientRepository = gitHubClient.createRepository(
-                Strings.concat("tesisV1", createAppRequest.getName()));
-        createProject(createAppRequest, userOwner, instance, gitHubClientRepository.getHtmlUrl());
+                Strings.concat("tesisV1", createAppDto.getName()));
+        createProject(createAppDto, instanceEntity, gitHubClientRepository.getHtmlUrl());
 
         return MessageResponse.builder()
                 .message(format(
                         "Se ha creado correctamente el projecto con nombre %s",
-                        createAppRequest.getName()))
+                        createAppDto.getName()))
                 .status(HttpStatus.CREATED)
                 .build();
     }
 
-    private void createProject(CreateAppRequest createAppRequest, String userOwner, Instance instance, String repositoryUrl) {
-        Project project = Project.builder()
-                .name(createAppRequest.getName())
-                .created_at(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .creator(userOwner)
-                .repository_url(repositoryUrl)
-                .instance_info(instance)
+    private void createProject(CreateAppDto createAppDto, InstanceEntity instanceEntity, String repositoryUrl) {
+        UserEntity userEntity = userRepository.findById(createAppDto.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+        ProjectEntity projectEntity = ProjectEntity.builder()
+                .name(createAppDto.getName())
+                .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .creator(userEntity)
+                .repositoryUrl(repositoryUrl)
+                .instanceInfo(instanceEntity)
                 .status("PENDING")
                 .build();
-        projectRepository.save(project);
+        projectRepository.save(projectEntity);
     }
 
-    private Instance getInstance(RunInstancesResponse runInstancesResponse) {
-        Instance instance = Instance.builder()
-                .instance_id(runInstancesResponse.instances().get(0).instanceId())
-                .host_url(runInstancesResponse.instances().get(0).publicDnsName())
+    private InstanceEntity getInstance(RunInstancesResponse runInstancesResponse) {
+        InstanceEntity instanceEntity = InstanceEntity.builder()
+                .instanceId(runInstancesResponse.instances().get(0).instanceId())
+                .hostUrl(runInstancesResponse.instances().get(0).publicDnsName())
                 .provider("AWS")
                 .type(runInstancesResponse.instances().get(0).instanceTypeAsString())
-                .reservation_id(runInstancesResponse.reservationId())
+                .reservationId(runInstancesResponse.reservationId())
                 .build();
-        instanceRepository.save(instance);
-        return instance;
+        instanceRepository.save(instanceEntity);
+        return instanceEntity;
     }
 
-    private Instance getInstance(VirtualMachine virtualMachine) {
-        Instance instance = Instance.builder()
-                .instance_id(virtualMachine.id())
-                .host_url(virtualMachine.getPrimaryPublicIPAddress().ipAddress())
+    private InstanceEntity getInstance(VirtualMachine virtualMachine) {
+        InstanceEntity instanceEntity = InstanceEntity.builder()
+                .instanceId(virtualMachine.id())
+                .hostUrl(virtualMachine.getPrimaryPublicIPAddress().ipAddress())
                 .provider("AZURE")
                 .type(virtualMachine.size().toString())
-                .reservation_id(null)
+                .reservationId(null)
                 .build();
-        instanceRepository.save(instance);
-        return instance;
+        instanceRepository.save(instanceEntity);
+        return instanceEntity;
     }
 
-    public MessageResponse<?> createDatabase(CreateDatabaseRequest createDatabaseRequest, String userOwner) {
-        if (databaseRepository.existsByName(createDatabaseRequest.getName())) {
+    public MessageResponse<?> createDatabase(CreateDatabaseDto createDatabaseDto, String userOwner) {
+        if (databaseRepository.existsByName(createDatabaseDto.getName())) {
             return MessageResponse.builder()
                     .message("Error: Database name already exist!")
                     .status(HttpStatus.BAD_REQUEST)
                     .build();
         }
-        Database project = Database.builder()
-                .name(createDatabaseRequest.getName())
-                .created_at(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .creator(userOwner)
-                .dbms(createDatabaseRequest.getDbms_type())
+        UserEntity userEntity = userRepository.findById(userOwner).orElseThrow(() -> new RuntimeException("User not found"));
+        DatabaseEntity project = DatabaseEntity.builder()
+                .name(createDatabaseDto.getName())
+                .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .creator(userEntity)
+                .dbms(createDatabaseDto.getDbms_type())
                 .build();
         databaseRepository.save(project);
         return MessageResponse.builder()
                 .message(format(
                         "Se ha creado correctamente la base de datos con nombre %s en %s",
-                        createDatabaseRequest.getName(), createDatabaseRequest.getDbms_type()))
+                        createDatabaseDto.getName(), createDatabaseDto.getDbms_type()))
                 .status(HttpStatus.CREATED)
                 .build();
     }
@@ -138,36 +144,60 @@ public class ProjectService {
     public MessageResponse<List<Project>> listProjects(String userOwner) {
         // TODO pasar long fecha a localdatetime
         dogStatsdClient.sendMetric();
+        List<ProjectEntity> allByCreator = projectRepository.findAllByCreator(userRepository.findById(userOwner).orElseThrow());
+        List<Project> projects = allByCreator.stream().map(projectMapper::mapToProject).toList();
         return MessageResponse.<List<Project>>builder()
-                .data(projectRepository.findByUserOwner(userOwner))
+                .data(projects)
                 .status(HttpStatus.OK)
                 .build();
     }
 
-    public MessageResponse<?> createTask(CreateTaskRequest createTaskRequest, String userId) {
-        if (taskRepository.existsByName(createTaskRequest.getName())) {
+    public MessageResponse<List<Database>> listDatabases() {
+        // TODO pasar long fecha a localdatetime
+        dogStatsdClient.sendMetric();
+        List<Database> projects = databaseRepository.findAll().stream().map(databaseMapper::mapToDatabase).toList();
+        return MessageResponse.<List<Database>>builder()
+                .data(projects)
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+
+    public MessageResponse<List<Task>> listTasks() {
+        // TODO pasar long fecha a localdatetime
+        dogStatsdClient.sendMetric();
+        List<Task> projects = taskRepository.findAll().stream().map(taskMapper::mapToTask).toList();
+        return MessageResponse.<List<Task>>builder()
+                .data(projects)
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    public MessageResponse<?> createTask(CreateTaskDto createTaskDto, String userName) {
+        if (taskRepository.existsByName(createTaskDto.getName())) {
             return MessageResponse.builder()
-                    .message(format("Error: Task name %s already exist!", createTaskRequest.getName()))
+                    .message(format("Error: Task name %s already exist!", createTaskDto.getName()))
                     .status(HttpStatus.BAD_REQUEST)
                     .build();
         }
-        Task project = Task.builder()
-                .name(createTaskRequest.getName())
-                .created_at(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .creator(userId)
-                .concurrent_url(createTaskRequest.getAction_url())
-                .scheduled_time(createTaskRequest.getCrontab_rule())
+        UserEntity userEntity = userRepository.findById(userName).orElseThrow(() -> new RuntimeException("User not found"));
+        TaskEntity project = TaskEntity.builder()
+                .name(createTaskDto.getName())
+                .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .creator(userEntity)
+                .concurrentUrl(createTaskDto.getAction_url())
+                .scheduledTime(createTaskDto.getCrontab_rule())
                 .build();
         taskRepository.save(project);
         return MessageResponse.builder()
                 .message(format(
                         "Se ha creado correctamente la tarea con nombre %s que correra cada %s",
-                        createTaskRequest.getName(), createTaskRequest.getCrontab_rule()))
+                        createTaskDto.getName(), createTaskDto.getCrontab_rule()))
                 .status(HttpStatus.CREATED)
                 .build();
     }
 
-    public MessageResponse<?> deleteProject(String userId, String projectName) {
+    public MessageResponse<?> deleteProject(String userName, String projectName) {
         // TODO Validar permisos de borrado
         projectRepository.deleteByName(projectName);
         return MessageResponse.builder()
@@ -176,7 +206,7 @@ public class ProjectService {
                 .build();
     }
 
-    public MessageResponse<?> deleteTask(String userId, String taskName) {
+    public MessageResponse<?> deleteTask(String userName, String taskName) {
         // TODO Validar permisos de borrado
         taskRepository.deleteByName(taskName);
         return MessageResponse.builder()

@@ -1,9 +1,7 @@
 package com.antithesis.cloudmag.controller;
 
-import com.antithesis.cloudmag.controller.payload.request.CreateVersionRequest;
+import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
-import com.antithesis.cloudmag.service.UserDetailsServiceImpl;
-import com.antithesis.cloudmag.service.UserService;
 import com.antithesis.cloudmag.service.VersionService;
 import com.antithesis.cloudmag.utils.ResponseUtils;
 import jakarta.validation.Valid;
@@ -21,8 +19,8 @@ public class VersionController {
     private final VersionService versionService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createVersions(@Valid @RequestBody CreateVersionRequest createVersionRequest) {
-        MessageResponse<?> messageResponse = versionService.createVersion(createVersionRequest);
+    public ResponseEntity<?> createVersions(@Valid @RequestBody CreateVersionDto createVersionDto) {
+        MessageResponse<?> messageResponse = versionService.createVersion(createVersionDto);
         return ResponseUtils.validateResponse(messageResponse);
     }
 

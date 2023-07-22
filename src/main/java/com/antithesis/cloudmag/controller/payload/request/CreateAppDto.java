@@ -4,15 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class CreateAppRequest {
-	@NotBlank
+public class CreateAppDto {
   	private String instance_type;
-
-	@NotBlank
 	private String cloud_provider;
-
-	@NotBlank
 	private String name;
-
+	private String username;
 	private Boolean http_access_allowed;
 }

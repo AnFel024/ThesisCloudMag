@@ -1,7 +1,8 @@
 package com.antithesis.cloudmag.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -9,22 +10,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Table(	name = "instances",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "instance_id"),
+                @UniqueConstraint(columnNames = "instanceId"),
                 @UniqueConstraint(columnNames = "name")
         })
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Instance {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class InstanceEntity {
     @Id
-    private String instance_id;
+    private String instanceId;
 
     @Size(max = 20)
     private String name;
@@ -37,7 +36,7 @@ public class Instance {
     private String provider;
 
     @Size(max = 120)
-    private String host_url;
+    private String hostUrl;
 
-    private String reservation_id;
+    private String reservationId;
 }
