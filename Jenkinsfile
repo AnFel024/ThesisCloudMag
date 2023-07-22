@@ -10,6 +10,20 @@ pipeline {
     stage('build') {
       steps {
         sh 'echo hola'
+        withGradle() {
+          sh './gradlew clean'
+        }
+
+        withGradle() {
+          sh './gradlew bootJar'
+        }
+
+      }
+    }
+
+    stage('docker') {
+      steps {
+        sh 'docker build -t anfel024/tesis-hub:spring-docker-3 .'
       }
     }
 
