@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Deploy {
-    private UUID id;
+    private UUID deployId;
     private Long createdAt;
     private Instance instanceInfo;
     private Version versionInfo;

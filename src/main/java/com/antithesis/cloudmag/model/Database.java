@@ -18,7 +18,7 @@ import java.util.UUID;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Database {
-    private UUID id;
+    private UUID databaseId;
     private String name;
     private String dbms;
     private User creator;

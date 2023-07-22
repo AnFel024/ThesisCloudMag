@@ -18,7 +18,7 @@ import java.util.UUID;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Task {
-    private UUID id;
+    private UUID taskId;
     private Long createdAt;
     private String name;
     private String concurrentUrl;

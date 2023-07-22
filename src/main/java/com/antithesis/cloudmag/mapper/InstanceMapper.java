@@ -9,7 +9,7 @@ import static org.mapstruct.factory.Mappers.getMapper;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface InstanceMapper {
-    InstanceMapper INSTANCE = getMapper(InstanceMapper.class);
+//    InstanceMapper INSTANCE = getMapper(InstanceMapper.class);
 
 
     Instance mapToInstance(InstanceEntity instanceEntity);
