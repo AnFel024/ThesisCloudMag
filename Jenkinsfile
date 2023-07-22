@@ -5,9 +5,9 @@ pipeline {
     }
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker-auth')
-        PROJECT_URL = env.GIT_URL
-        PROJECT_NAME = env.GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
-        BRANCH = env.GIT_BRANCH
+        PROJECT_URL = "${env.GIT_URL}"
+        PROJECT_NAME = "${env.GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')}"
+        BRANCH = "${env.GIT_BRANCH}"
     }
     stages {
         stage('Env vars') {
