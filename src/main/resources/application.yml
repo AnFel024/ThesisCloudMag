@@ -4,6 +4,9 @@ server:
 github:
   gh-credentials: "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"
 
+docker:
+  credentials: dckr_pat_YCRgPSgNzc96jr5EL2oeUgVSsqM
+
 aws-credentials:
   aws-public-key: "AKIAZOW6FHBCJVU3OA7O"
   aws-private-key: "iy/pruCQO/bxsGsFIUYsPSWacDqsMlKVziXufCKO"

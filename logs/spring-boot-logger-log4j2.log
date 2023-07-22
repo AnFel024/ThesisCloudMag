@@ -25,3 +25,6 @@
 2023-07-21 23:03:13,086 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port(s): 8088 (http) with context path ''
 2023-07-21 23:03:13,089 INFO o.s.b.StartupInfoLogger [restartedMain] Started CloudMagApplication in 11.47 seconds (process running for 86.76)
 2023-07-21 23:03:13,090 INFO o.s.b.d.a.ConditionEvaluationDeltaLoggingListener [restartedMain] Condition evaluation unchanged
+2023-07-21 23:07:58,507 INFO o.s.o.j.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-07-21 23:07:58,508 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-2 - Shutdown initiated...
+2023-07-21 23:07:58,510 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-2 - Shutdown completed.
