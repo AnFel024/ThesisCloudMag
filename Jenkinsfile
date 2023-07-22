@@ -34,7 +34,11 @@ pipeline {
                 }
             }
         }
-
+        stage('Login') {
+            steps {
+                sh "cat $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+            }
+        }
         stage('docker') {
             steps {
                 sh "docker build -t anfel024/$PROJECT_NAME:spring-docker-3 ."
@@ -43,11 +47,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh "docker build -t anfel024/$PROJECT_NAME ."
-            }
-        }
-        stage('Login') {
-            steps {
-                sh "cat $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
             }
         }
         stage('Push') {
