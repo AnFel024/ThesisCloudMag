@@ -4,15 +4,12 @@ server:
 github:
   gh-credentials: "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"
 
-<<<<<<< HEAD
 spring:
   datasource:
     url: jdbc:postgresql://3.94.187.190:5432/test
     username: postgres
     password: 123987
 
-=======
->>>>>>> 0986fe9c03566d0e2e3002b226bd8265802af6ce
 docker:
   credentials: dckr_pat_YCRgPSgNzc96jr5EL2oeUgVSsqM
 
