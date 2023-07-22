@@ -4,10 +4,11 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('docker-auth')
+        DOCKERHUB_CREDENTIALS = ('docker-auth')
         PROJECT_URL = "$env.GIT_URL"
         PROJECT_NAME = "$env.GIT_URL".replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
         BRANCH = "$env.GIT_BRANCH"
+        DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
     }
     stages {
         stage('Env vars') {
@@ -34,24 +35,25 @@ pipeline {
                 }
             }
         }
-        stage('Login') {
+        stage('Build image') {
             steps {
-                sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
-            }
-        }
-        stage('docker') {
-            steps {
-                sh "docker build -t anfel024/$PROJECT_NAME:spring-docker-3 ."
-            }
-        }
-        stage('Build') {
-            steps {
-                sh "docker build -t anfel024/$PROJECT_NAME ."
+                script {
+                    dockerImage = docker.build DOCKER_REGISTRY + ':spring-test-1'
+                }
             }
         }
         stage('Push') {
             steps {
-                sh "docker push anfel024/$PROJECT_NAME"
+                script {
+                    docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+        stage('Cleaning up') {
+            steps {
+                sh "docker rmi $DOCKER_REGISTRY:spring-test-1"
             }
         }
     }
