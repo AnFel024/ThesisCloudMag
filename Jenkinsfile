@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Checkout code') {
             steps {
-                git(url: '${PROJECT_URL}', branch: '${BRANCH}', credentialsId: 'github-atuh')
+                git(url: $PROJECT_URL, branch: $BRANCH, credentialsId: 'github-atuh')
             }
         }
 
@@ -38,12 +38,12 @@ pipeline {
 
         stage('docker') {
             steps {
-                sh 'docker build -t anfel024/${PROJECT_NAME}:spring-docker-3 .'
+                sh 'docker build -t anfel024/$PROJECT_NAME:spring-docker-3 .'
             }
         }
         stage('Build') {
             steps {
-                sh 'docker build -t anfel024/${PROJECT_NAME} .'
+                sh 'docker build -t anfel024/$PROJECT_NAME .'
             }
         }
         stage('Login') {
@@ -53,7 +53,7 @@ pipeline {
         }
         stage('Push') {
             steps {
-                sh 'docker push anfel024/${PROJECT_NAME}'
+                sh 'docker push anfel024/$PROJECT_NAME'
             }
         }
     }
