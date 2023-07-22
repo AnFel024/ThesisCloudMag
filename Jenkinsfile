@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Env vars') {
             steps {
-                echo 'Hola a todos!'
+                echo 'Hola a todos! Empezando pruebas'
                 echo "The git url is ${env.GIT_URL}"
                 echo "Project name ${PROJECT_NAME}"
             }
