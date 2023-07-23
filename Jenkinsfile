@@ -9,7 +9,7 @@ pipeline {
         PROJECT_URL = "$app_url"
         PROJECT_NAME = "$app_name"
         TAG_NAME = "$version_tag"
-        BRANCH_NAME = "$branch_name"
+        BRANCH = "$branch_type/$branch_name"
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
     }
     stages {
