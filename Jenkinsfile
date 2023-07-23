@@ -4,11 +4,11 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     environment {
+        DOCKERHUB_CREDENTIALS = ('docker-auth')
         PROJECT_URL = "$env.GIT_URL"
         PROJECT_NAME = "$env.GIT_URL".replaceFirst(/^.*\/([^\/]+?).git$/, '$1').toLowerCase()
         BRANCH = "$env.GIT_BRANCH"
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
-        DOCKERHUB_CREDENTIALS = ('docker-auth')
         CREATE_VERSION = "$create_version"
     }
     stages {
@@ -20,12 +20,11 @@ pipeline {
             }
             steps {
                 script {
-                    PROJECT_ORGANIZATION = "$app_name".toLowerCase()
                     PROJECT_NAME = "$app_name".toLowerCase()
                     TAG_NAME = "$version_tag"
                     DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
+                    echo 'Se creara una version desplegable'
                 }
-                echo 'Se creara una version desplegable'
             }
         }
         stage('Checkout code') {
@@ -63,8 +62,10 @@ pipeline {
                     }
                 }
 
-                echo 'cCleaning docker environment'
-                sh "docker rmi $DOCKER_REGISTRY:$TAG_NAME"
+                script {
+                    echo 'cleaning docker environment'
+                    sh "docker rmi $DOCKER_REGISTRY:$TAG_NAME"
+                }
             }
         }
     }
