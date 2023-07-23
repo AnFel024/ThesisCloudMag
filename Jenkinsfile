@@ -13,11 +13,12 @@ pipeline {
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
     }
     stages {
-        stage('Env vars') {
+        stage('Env vars updated') {
             steps {
                 echo 'Hola a todos! Empezando pruebas'
                 echo "The git url is $PROJECT_URL"
                 echo "Project name $PROJECT_NAME"
+                echo "Branch name $BRANCH"
                }
         }
         stage('Demo Shared') {
