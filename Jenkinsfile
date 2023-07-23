@@ -20,11 +20,9 @@ pipeline {
             }
             steps {
                 script {
-                    PROJECT_URL = "$app_url"
                     PROJECT_ORGANIZATION = "$app_name".toLowerCase()
                     PROJECT_NAME = "$app_name".toLowerCase()
                     TAG_NAME = "$version_tag"
-                    BRANCH = "$branch_name"
                     DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
                 }
                 echo 'Se creara una version desplegable'
