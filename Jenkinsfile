@@ -15,7 +15,7 @@ pipeline {
         stage('Initialize docker environment') {
             when {
                 expression {
-                    return CREATE_VERSION != null && CREATE_VERSION.toBoolean()
+                    return CREATE_VERSION != null && Boolean.valueOf(CREATE_VERSION)
                 }
             }
             steps {
@@ -47,7 +47,7 @@ pipeline {
         stage('Build and push docker image') {
             when {
                 expression {
-                    return CREATE_VERSION != null && CREATE_VERSION.toBoolean()
+                    return CREATE_VERSION != null && Boolean.valueOf(CREATE_VERSION)
                 }
             }
             steps {
