@@ -2,7 +2,7 @@ server:
   port: 8081
 
 github:
-  gh-credentials: "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"
+  gh-credentials: "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"
 
 spring:
   datasource:

@@ -1,4 +1,4 @@
-@Library('pipeline-shared')_
+@Library('tesis-shared-libraries')_
 pipeline {
     agent any
     options {
