@@ -1,3 +1,4 @@
+@Library('pipeline-shared')_
 pipeline {
     agent any
     options {
@@ -11,6 +12,10 @@ pipeline {
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
     }
     stages {
+        stage('Demo Shared') {
+             echo 'Hello world'
+             helloWorld()
+         }
         stage('Env vars') {
             steps {
                 echo 'Hola a todos! Empezando pruebas'
