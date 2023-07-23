@@ -7,7 +7,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = ('docker-auth')
         PROJECT_URL = "$app_url"
-        PROJECT_NAME = "$app_name"
+        PROJECT_NAME = "$app_name".toLowerCase()
         TAG_NAME = "$version_tag"
         BRANCH = "$branch_name"
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
