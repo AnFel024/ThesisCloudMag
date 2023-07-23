@@ -11,10 +11,6 @@ pipeline {
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
     }
     stages {
-        stage('Demo Shared') {
-             echo 'Hello world'
-             helloWorld()
-         }
         stage('Env vars') {
             steps {
                 echo 'Hola a todos! Empezando pruebas'
@@ -24,6 +20,12 @@ pipeline {
                     library "tesis-shared-libraries@master"
                   }
                }
+        }
+        stage('Demo Shared') {
+            steps {
+                echo 'Hello world'
+                helloWorld()
+            }
         }
         stage('Checkout code') {
             steps {
