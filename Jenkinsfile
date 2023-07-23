@@ -1,3 +1,4 @@
+@Library('tesis-shared-libraries')_
 pipeline {
     agent any
     options {
@@ -16,9 +17,6 @@ pipeline {
                 echo 'Hola a todos! Empezando pruebas'
                 echo "The git url is $PROJECT_URL"
                 echo "Project name $PROJECT_NAME"
-                scripts {
-                    library "tesis-shared-libraries@master"
-                  }
                }
         }
         stage('Demo Shared') {
