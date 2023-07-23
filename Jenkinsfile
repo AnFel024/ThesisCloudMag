@@ -12,6 +12,13 @@ pipeline {
         CREATE_VERSION = "$create_version"
     }
     stages {
+        stage ('Initialize') {
+            steps {
+                script {
+                    echo "$env"
+                }
+            }
+        }
         stage('Initialize docker environment') {
             when {
                 expression {
