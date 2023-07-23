@@ -6,9 +6,10 @@ pipeline {
     }
     environment {
         DOCKERHUB_CREDENTIALS = ('docker-auth')
-        PROJECT_URL = "$env.GIT_URL"
-        PROJECT_NAME = "$env.GIT_URL".replaceFirst(/^.*\/([^\/]+?).git$/, '$1').toLowerCase()
-        BRANCH = "$env.GIT_BRANCH"
+        PROJECT_URL = "$app_url"
+        PROJECT_NAME = "$app_name"
+        TAG_NAME = "$version_tag"
+        BRANCH_NAME = "$branch_name"
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
     }
     stages {
@@ -27,7 +28,7 @@ pipeline {
         }
         stage('Checkout code') {
             steps {
-                git(url: "$PROJECT_URL", branch: "$BRANCH", credentialsId: 'github-atuh')
+                git(url: PROJECT_URL, branch: BRANCH, credentialsId: 'gh-token-auth')
             }
         }
         stage('build gradle') {
@@ -45,7 +46,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build DOCKER_REGISTRY + ':spring-test-2'
+                    dockerImage = docker.build DOCKER_REGISTRY + TAG_NAME
                 }
             }
         }
@@ -60,7 +61,7 @@ pipeline {
         }
         stage('Cleaning up') {
             steps {
-                sh "docker rmi $DOCKER_REGISTRY:spring-test-2"
+                sh "docker rmi $DOCKER_REGISTRY:$TAG_NAME"
             }
         }
     }
