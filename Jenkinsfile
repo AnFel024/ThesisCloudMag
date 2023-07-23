@@ -6,7 +6,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = ('docker-auth')
         PROJECT_URL = "$env.GIT_URL"
-        PROJECT_NAME = "$env.GIT_URL".replaceFirst(/^.*\/([^\/]+?).git$/, '$1')
+        PROJECT_NAME = "$env.GIT_URL".replaceFirst(/^.*\/([^\/]+?).git$/, '$1').toLowerCase()
         BRANCH = "$env.GIT_BRANCH"
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
     }
