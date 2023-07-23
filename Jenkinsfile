@@ -38,7 +38,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build DOCKER_REGISTRY + ':spring-test-2'
+                    dockerImage = docker.build DOCKER_REGISTRY + ':spring-test-1'
                 }
             }
         }
