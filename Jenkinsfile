@@ -9,12 +9,13 @@ pipeline {
         BRANCH = "$env.GIT_BRANCH"
         DOCKER_REGISTRY = "anfel024/$PROJECT_NAME"
         DOCKERHUB_CREDENTIALS = ('docker-auth')
+        CREATE_VERSION = "$create_version"
     }
     stages {
         stage('Initialize docker environment') {
             when {
                 expression {
-                    return "$create_version" != null && "$create_version".toBoolean()
+                    return CREATE_VERSION != null && CREATE_VERSION.toBoolean()
                 }
             }
             steps {
@@ -48,7 +49,7 @@ pipeline {
         stage('Build and push docker image') {
             when {
                 expression {
-                    return "$create_version" != null && "$create_version".toBoolean()
+                    return CREATE_VERSION != null && CREATE_VERSION.toBoolean()
                 }
             }
             steps {
