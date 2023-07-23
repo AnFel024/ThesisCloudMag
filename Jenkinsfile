@@ -53,18 +53,18 @@ pipeline {
             }
             steps {
                 script {
+                    echo 'Building docker image...'
                     dockerImage = docker.build DOCKER_REGISTRY +":"+ TAG_NAME
                 }
 
                 script {
+                    echo 'Pushing docker image...'
                     docker.withRegistry('', DOCKERHUB_CREDENTIALS) {
                         dockerImage.push()
                     }
                 }
-            }
-        }
-        stage('Cleaning up') {
-            steps {
+
+                echo 'cCleaning docker environment'
                 sh "docker rmi $DOCKER_REGISTRY:$TAG_NAME"
             }
         }
