@@ -7,6 +7,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = ('docker-auth')
         PROJECT_URL = "$app_url"
+        PROJECT_ORGANIZATION = "$app_name".toLowerCase()
         PROJECT_NAME = "$app_name".toLowerCase()
         TAG_NAME = "$version_tag"
         BRANCH = "$branch_name"
@@ -47,7 +48,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build DOCKER_REGISTRY + TAG_NAME
+                    dockerImage = docker.build DOCKER_REGISTRY +":"+ TAG_NAME
                 }
             }
         }
