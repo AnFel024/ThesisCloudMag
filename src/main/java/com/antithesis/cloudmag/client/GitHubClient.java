@@ -16,16 +16,15 @@ import java.net.http.HttpResponse;
 public class GitHubClient {
     private static final String TARGET_URL = "https://api.github.com/orgs/cloudmag-tesis/repos";
 
-    private final String GAT;
     private final ObjectMapper objectMapper;
 
-    public GitHubClient(@Value("${github.gh-credentials}") String gat, ObjectMapper objectMapper) {
-        GAT = gat;
+    public GitHubClient(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     @SneakyThrows
     public GitHubResponse createRepository(String repositoryName) {
+        final String GAT = System.getenv("GIT_TOKEN_AUTH");
         URI targetURI = new URI(TARGET_URL);
         GitHubRequest body = GitHubRequest.builder()
                 .name(repositoryName)

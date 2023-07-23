@@ -1,9 +1,6 @@
 server:
   port: 8081
 
-github:
-  gh-credentials: "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"
-
 spring:
   datasource:
     url: jdbc:postgresql://3.94.187.190:5432/test
