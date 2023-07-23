@@ -58,7 +58,7 @@ pipeline {
         }
         stage('Cleaning up') {
             steps {
-                sh "docker rmi $DOCKER_REGISTRY:spring-test-1"
+                sh "docker rmi $DOCKER_REGISTRY:spring-test-2"
             }
         }
     }
