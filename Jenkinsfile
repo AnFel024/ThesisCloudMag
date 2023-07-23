@@ -3,6 +3,11 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
+    parameters {
+        string(defaultValue: "$env.GIT_URL", description: 'K', name: 'app_name')
+        string(defaultValue: "0.0.0", description: 'K', name: 'version_tag')
+        string(defaultValue: "false", description: 'K', name: 'create_version')
+    }
     environment {
         DOCKERHUB_CREDENTIALS = ('docker-auth')
         PROJECT_URL = "$env.GIT_URL"
