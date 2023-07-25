@@ -2,6 +2,7 @@ package com.antithesis.cloudmag.controller;
 
 import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
+import com.antithesis.cloudmag.service.DeploysService;
 import com.antithesis.cloudmag.service.VersionService;
 import com.antithesis.cloudmag.utils.ResponseUtils;
 import jakarta.validation.Valid;
@@ -16,16 +17,16 @@ import javax.inject.Inject;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class DeploysController {
 
-    private final VersionService versionService;
+    private final DeploysService deploysService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createVersions(@Valid @RequestBody CreateVersionDto createVersionDto) {
-        MessageResponse<?> messageResponse = versionService.createVersion(createVersionDto);
+    public ResponseEntity<?> createDeploy(@Valid @RequestBody CreateVersionDto createVersionDto) {
+        MessageResponse<?> messageResponse = deploysService.createVersion(createVersionDto);
         return ResponseUtils.validateResponse(messageResponse);
     }
 
     @GetMapping("/list/")
-    public ResponseEntity<?> getVersions(@PathVariable String user_id) {
-        return ResponseEntity.ok().body(versionService.listVersions(user_id));
+    public ResponseEntity<?> getDeploys(@PathVariable String repo_id) {
+        return ResponseEntity.ok().body(deploysService.listDeploys(repo_id));
     }
 }

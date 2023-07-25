@@ -35,6 +35,8 @@ public class VersionEntity {
     @NotBlank
     private String tagName;
 
+    private String status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "version_users",
             joinColumns = @JoinColumn(name = "id"),

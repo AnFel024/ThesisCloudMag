@@ -26,14 +26,9 @@ public class ProjectsController {
         return ResponseUtils.validateResponse(projectService.listProjects(listInfoDto.getUsername()));
     }
 
-    @PostMapping("/list-task")
+    @PostMapping("/list-databases") // TODO pending
     public ResponseEntity<?> getDatabases() {
         return ResponseUtils.validateResponse(projectService.listDatabases());
-    }
-
-    @PostMapping("/list-databases")
-    public ResponseEntity<?> getTasks() {
-        return ResponseUtils.validateResponse(projectService.listTasks());
     }
 
     @PostMapping("/create-project")
@@ -46,19 +41,8 @@ public class ProjectsController {
         return ResponseUtils.validateResponse(projectService.createDatabase(createDatabaseDto, user_id));
     }
 
-    @PostMapping("/create-task/user/{user_id}")
-    public ResponseEntity<?> createTask(@Valid @RequestBody CreateTaskDto createTaskDto, @PathVariable String user_id) {
-        return ResponseUtils.validateResponse(projectService.createTask(createTaskDto, user_id));
-    }
-
     @DeleteMapping("/user/{user_id}/name/{project_name}")
     public ResponseEntity<?> deleteProject(@PathVariable String user_id, @PathVariable String project_name) {
         return ResponseUtils.validateResponse(projectService.deleteProject(user_id, project_name));
     }
-
-    @DeleteMapping("/task/user/{user_id}/name/{task_name}")
-    public ResponseEntity<?> deleteTask(@PathVariable String user_id, @PathVariable String task_name) {
-        return ResponseUtils.validateResponse(projectService.deleteTask(user_id, task_name));
-    }
-
 }

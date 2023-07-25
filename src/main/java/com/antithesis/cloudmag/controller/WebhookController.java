@@ -13,26 +13,22 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 
 @RestController
-@RequestMapping("/version")
+@RequestMapping("/events")
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class VersionController {
+public class WebhookController {
 
     private final VersionService versionService;
     private final GitHubClient gitHubClient;
 
-    @PostMapping("/create")
+    @PostMapping("/github/webhook")
     public ResponseEntity<?> createVersions(@Valid @RequestBody CreateVersionDto createVersionDto) {
         MessageResponse<?> messageResponse = versionService.createVersion(createVersionDto);
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/list/user/{user_id}/tags")
-    public ResponseEntity<?> getVersions(@PathVariable String user_id) {
-        return ResponseEntity.ok().body(versionService.listVersions(user_id));
-    }
-
-    @GetMapping("/list/org/{org}/repo/{repo_id}/branches")
-    public ResponseEntity<?> getBranches(@PathVariable String repo_id, @PathVariable String org) {
-        return ResponseEntity.ok().body(gitHubClient.listBranches(org, repo_id));
+    @PostMapping("/jenkins/events")
+    public ResponseEntity<?> finishVersion(@Valid @RequestBody CreateVersionDto createVersionDto) {
+        MessageResponse<?> messageResponse = versionService.createVersion(createVersionDto);
+        return ResponseUtils.validateResponse(messageResponse);
     }
 }

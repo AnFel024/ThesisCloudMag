@@ -32,6 +32,9 @@ dependencies {
     // Guava
     implementation 'com.google.guava:guava:31.1-jre'
 
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation 'org.postgresql:postgresql:42.6.0'
 

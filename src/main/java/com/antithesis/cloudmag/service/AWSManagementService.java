@@ -16,7 +16,7 @@ public class AWSManagementService {
     public RunInstancesResponse generateInstance(InstanceType instanceType) {
         /*
         # AWS region id     -> us-east-1
-        # Security group id ->collect sg-049be70bb05fbf786
+        # Security group id -> collect sg-049be70bb05fbf786
         # AMI id            -> ami-0557a15b87f6559cf
         # Key Pair          -> THESIS_WORK_KEY_PAIR
          */

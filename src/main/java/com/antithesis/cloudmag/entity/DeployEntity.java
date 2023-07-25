@@ -23,6 +23,7 @@ public class DeployEntity {
     private UUID id;
 
     private Long createdAt;
+    private String status;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "version_instances",
