@@ -26,9 +26,9 @@ public class VersionController {
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/list/user/{user_id}/tags")
-    public ResponseEntity<?> getVersions(@PathVariable String user_id) {
-        return ResponseEntity.ok().body(versionService.listVersions(user_id));
+    @GetMapping("/list")
+    public ResponseEntity<?> getVersions() {
+        return ResponseEntity.ok().body(versionService.listVersions());
     }
 
     @GetMapping("/list/org/{org}/repo/{repo_id}/branches")

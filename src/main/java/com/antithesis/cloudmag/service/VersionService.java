@@ -37,14 +37,12 @@ public class VersionService {
                 createVersionDto.getAppUrl(),
                 createVersionDto.getAppName(),
                 createVersionDto.getBranchName(),
-                createVersionDto.getBranchType(),
-                createVersionDto.getCreateVersion(),
-                createVersionDto.getVersionType()
+                createVersionDto.getTag(),
+                createVersionDto.getBranchType()
         );
         VersionEntity versionEntity = VersionEntity.builder()
                 .name(createVersionDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .description(createVersionDto.getDescription())
                 .tagName(createVersionDto.getTag())
                 .creator(userRepository.findById(createVersionDto.getUsername()).get())
                 .status(versionTriggered ? "PENDING" : "FAILED")
@@ -57,11 +55,11 @@ public class VersionService {
                 .build();
     }
 
-    public MessageResponse<List<Version>> listVersions(String projectName) {
+    public MessageResponse<List<Version>> listVersions() {
         // TODO pasar long fecha a localdatetime
         return MessageResponse.<List<Version>>builder()
                 .status(HttpStatus.OK)
-                .data(versionRepository.findAllByProjectInfoName(projectName).stream()
+                .data(versionRepository.findAll().stream()
                         .map(versionMapper::mapToVersion)
                         .toList())
                 .build();

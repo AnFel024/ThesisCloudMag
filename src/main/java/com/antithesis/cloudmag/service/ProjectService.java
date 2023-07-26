@@ -19,6 +19,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
 import software.amazon.awssdk.services.ec2.model.InstanceType;
 import software.amazon.awssdk.services.ec2.model.RunInstancesResponse;
 
@@ -128,8 +129,7 @@ public class ProjectService {
         String randomPass = RandomStringUtils.randomAlphabetic(10);
         Boolean success = jenkinsClient.triggerJob(
                 createDatabaseDto.getAppOrg(), createDatabaseDto.getAppUrl(), createDatabaseDto.getAppName(),
-                createDatabaseDto.getBranchName(), createDatabaseDto.getBranchType(),
-                createDatabaseDto.getCreateVersion(), createDatabaseDto.getVersionType());
+                createDatabaseDto.getBranchName(), "",createDatabaseDto.getBranchType());
         DatabaseEntity project = DatabaseEntity.builder()
                 .name(createDatabaseDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
@@ -147,7 +147,7 @@ public class ProjectService {
                 .build();
     }
 
-    public MessageResponse<List<Project>> listProjects(String userOwner) {
+    public MessageResponse<List<Project>> listProjects() {
         // TODO pasar long fecha a localdatetime
         dogStatsdClient.sendMetric();
         List<ProjectEntity> allByCreator = projectRepository.findAll();
@@ -173,6 +173,28 @@ public class ProjectService {
         projectRepository.deleteByName(projectName);
         return MessageResponse.builder()
                 .message(format("Se ha eliminado correctamente el proyecto %s", projectName))
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    public MessageResponse validateInstanceStatus() {
+        DescribeInstancesResponse describeInstancesResponse = awsManagementService.validateInstanceHealth();
+        List<ProjectEntity> projectEntities = projectRepository.findAll();
+        projectEntities.stream().filter(projectEntity -> "PENDING".equals(projectEntity.getStatus())).forEach(projectEntity -> {
+            describeInstancesResponse.reservations().forEach(reservation -> {
+                reservation.instances().forEach(instance -> {
+                    if (projectEntity.getInstanceInfo().getId().equals(instance.instanceId())) {
+                        InstanceEntity instanceEntity = instanceRepository.findById(instance.instanceId()).get();
+                        instanceEntity.setHostUrl(instance.publicDnsName());
+                        projectEntity.setInstanceInfo(instanceEntity);
+                        projectEntity.setStatus("RUNNING");
+                        projectRepository.save(projectEntity);
+                    }
+                });
+            });
+        });
+        return MessageResponse.builder()
+                .message("Se ha validado el estado de las instancias")
                 .status(HttpStatus.OK)
                 .build();
     }

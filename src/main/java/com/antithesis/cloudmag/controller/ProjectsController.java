@@ -6,6 +6,7 @@ import com.antithesis.cloudmag.controller.payload.request.CreateTaskDto;
 import com.antithesis.cloudmag.controller.payload.request.ListInfoDto;
 import com.antithesis.cloudmag.service.ProjectService;
 import com.antithesis.cloudmag.utils.ResponseUtils;
+import com.azure.core.annotation.Get;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,8 @@ public class ProjectsController {
     private final ProjectService projectService;
 
     @PostMapping("/list-by-user")
-    public ResponseEntity<?> getProjects(@Valid @RequestBody ListInfoDto listInfoDto) {
-        return ResponseUtils.validateResponse(projectService.listProjects(listInfoDto.getUsername()));
+    public ResponseEntity<?> getProjects() {
+        return ResponseUtils.validateResponse(projectService.listProjects());
     }
 
     @PostMapping("/list-databases") // TODO pending
@@ -44,5 +45,10 @@ public class ProjectsController {
     @DeleteMapping("/user/{user_id}/name/{project_name}")
     public ResponseEntity<?> deleteProject(@PathVariable String user_id, @PathVariable String project_name) {
         return ResponseUtils.validateResponse(projectService.deleteProject(user_id, project_name));
+    }
+
+    @GetMapping("/validate-instances")
+    public ResponseEntity<?> testInstance() {
+        return ResponseEntity.ok().body(projectService.validateInstanceStatus());
     }
 }

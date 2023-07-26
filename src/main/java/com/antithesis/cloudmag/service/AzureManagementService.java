@@ -41,7 +41,7 @@ public class AzureManagementService {
         return azureResourceManager.virtualMachines()
                 .define(name)
                 .withRegion(REGION)
-                .withNewResourceGroup()
+                .withNewResourceGroup("tesis-1-ip")
                 .withNewPrimaryNetwork("10.0.0.0/24")
                 .withPrimaryPrivateIPAddressDynamic()
                 .withNewPrimaryPublicIPAddress(name + "-ip")

@@ -22,8 +22,8 @@ public class AWSManagementService {
          */
         // TODO validar image id
         RunInstancesRequest request = RunInstancesRequest.builder()
-                .securityGroupIds("sg-049be70bb05fbf786")
-                .keyName("THESIS_WORK_KEY_PAIR")
+                .securityGroupIds("sg-05f6e938375a4b58e")
+                .keyName("THESIS-KEY-PAIR")
                 .instanceType(instanceType)
                 .imageId("ami-0557a15b87f6559cf")
                 .minCount(1)
@@ -33,11 +33,11 @@ public class AWSManagementService {
         if (!runInstancesResponse.hasInstances()) {
             throw new RuntimeException("Fallo en la creacion de instancias");
         }
+
         return runInstancesResponse;
     }
 
     public DescribeInstancesResponse validateInstanceHealth() {
-        DescribeInstancesResponse describeInstancesResponse = ec2Client.describeInstances();
-        return describeInstancesResponse;
+        return ec2Client.describeInstances();
     }
 }

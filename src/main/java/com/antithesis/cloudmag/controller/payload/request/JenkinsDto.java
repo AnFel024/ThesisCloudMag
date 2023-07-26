@@ -20,6 +20,4 @@ public class JenkinsDto {
     private String appName;
     private String branchName;
     private String branchType;
-    private String createVersion;
-    private String versionType;
 }
