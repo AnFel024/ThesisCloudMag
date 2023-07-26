@@ -2,6 +2,7 @@ package com.antithesis.cloudmag.service;
 
 import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
+import com.antithesis.cloudmag.controller.payload.request.CreateDeployDto;
 import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
 import com.antithesis.cloudmag.entity.DeployEntity;
@@ -30,20 +31,20 @@ public class DeploysService {
     private final JenkinsClient jenkinsClient;
     private final DogStatsdClient dogStatsdClient;
 
-    public MessageResponse<String> createDeploy(CreateVersionDto createVersionDto) {
+    public MessageResponse<String> createDeploy(CreateDeployDto createDeployDto) {
         UserEntity userEntity = userRepository.findById(
-                createVersionDto.getUsername())
+                createDeployDto.getUsername())
                 .orElseThrow(() ->
                         new RuntimeException(
-                                format("User with id %s not found", createVersionDto.getUsername())));
+                                format("User with id %s not found", createDeployDto.getUsername())));
         ProjectEntity projectEntities = projectRepository.findAll().stream().filter(
-                projectEntity -> projectEntity.getName().equals(createVersionDto.getProjectName())
+                projectEntity -> projectEntity.getName().equals(createDeployDto.getProjectName())
         ).findFirst().get();
         Boolean success = jenkinsClient.triggerDeployJob(
-                projectEntities.getName() + "-" + createVersionDto.getTag(),
-                projectEntities.getName(),
-                createVersionDto.getTag(),
-                projectEntities.getInstanceInfo().getHostUrl());
+                createDeployDto.getProjectName() + "-" + createDeployDto.getTag(),
+                createDeployDto.getProjectName(),
+                createDeployDto.getTag(),
+                createDeployDto.getIpDir());
         DeployEntity versionEntity = DeployEntity.builder()
                 .creator(userEntity)
                 .status(success ? "SUCCESS" : "FAILED")

@@ -1,5 +1,6 @@
 package com.antithesis.cloudmag.controller;
 
+import com.antithesis.cloudmag.controller.payload.request.CreateDeployDto;
 import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
 import com.antithesis.cloudmag.service.DeploysService;
@@ -19,8 +20,8 @@ public class DeploysController {
     private final DeploysService deploysService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createDeploy(@Valid @RequestBody CreateVersionDto createVersionDto) {
-        MessageResponse<?> messageResponse = deploysService.createDeploy(createVersionDto);
+    public ResponseEntity<?> createDeploy(@Valid @RequestBody CreateDeployDto createDeployDto) {
+        MessageResponse<?> messageResponse = deploysService.createDeploy(createDeployDto);
         return ResponseUtils.validateResponse(messageResponse);
     }
 

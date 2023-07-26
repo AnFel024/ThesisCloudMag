@@ -1,10 +1,8 @@
 package com.antithesis.cloudmag.client;
 
-import com.antithesis.cloudmag.client.request.GitHubRequest;
 import com.antithesis.cloudmag.client.responses.GitHubCreateRepositoryResponse;
 import com.antithesis.cloudmag.client.responses.GitHubListBranchesResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.util.ArrayUtils;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,9 +19,23 @@ import static java.lang.String.format;
 @Component
 public class GitHubClient {
     private static final String BASE_URL = "https://api.github.com";
-    private static final String CREATE_REPO_TARGET_URL = "%s/orgs/cloudmag-tesis/repos";
+    private static final String CREATE_REPO_TARGET_URL = "%s/repos/cloudmag-tesis/spring-template/generate";
     private static final String LIST_BRANCH_TARGET_URL = "%s/repos/%s/%s/branches";
 
+    /*
+    curl --location 'https://api.github.com/repos/cloudmag-tesis/spring-template/generate' \
+        --header 'Accept: application/vnd.github+json' \
+        --header 'Authorization: Bearer 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' \
+        --header 'Content-Type: application/json' \
+        --header 'Cookie: _octo=GH1.1.1705964187.1680918574; logged_in=no' \
+        --data '{
+            "owner":"cloudmag-tesis",
+            "name":"template-generated",
+            "description":"Repo created from a template",
+            "include_all_branches":false,
+            "private":true
+        }'
+     */
     private final String GAT;
     private final ObjectMapper objectMapper;
 
@@ -35,9 +47,13 @@ public class GitHubClient {
     @SneakyThrows
     public GitHubCreateRepositoryResponse createRepository(String repositoryName) {
         URI targetURI = new URI(format(CREATE_REPO_TARGET_URL, BASE_URL));
-        GitHubRequest body = GitHubRequest.builder()
-                .name(repositoryName)
-                .build();
+        String body = String.join("&", List.of(
+                "name="+repositoryName,
+                "owner="+"cloudmag-tesis",
+                "description="+"Generated template",
+                "include_all_branches="+"false",
+                "private="+"true"
+        ));
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(targetURI)
                 .header("Authorization", "token " + GAT)

@@ -31,6 +31,7 @@ public class JenkinsClient {
                               String versionTag,
                               String branchType) {
         String params = String.join("&", java.util.List.of("token=my_token","app_org=" + appOrg,
+                "app_name="+ appName,
                 "app_url=" + appUrl,
                 "branch_name=" + branchName,
                 "branch_type=" + branchType,
