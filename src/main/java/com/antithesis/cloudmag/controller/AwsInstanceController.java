@@ -40,8 +40,8 @@ public class AwsInstanceController {
 //        return ResponseEntity.ok().body("");
 //    }
 
-    @GetMapping("/validate-instances")
-    public ResponseEntity<?> testRest() {
+    @GetMapping("/validate-instances/status")
+    public ResponseEntity<?> testRestStatus() {
         return ResponseEntity.ok().body(awsManagementService.validateInstanceHealth());
     }
 

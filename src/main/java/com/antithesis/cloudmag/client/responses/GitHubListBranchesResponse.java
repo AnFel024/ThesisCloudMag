@@ -7,9 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
-
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -17,11 +14,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Builder
-public class GitHubResponse {
-    private int id;
-    private String nodeId;
+public class GitHubListBranchesResponse {
     private String name;
-    private String fullName;
-    private String htmlUrl;
 }
 

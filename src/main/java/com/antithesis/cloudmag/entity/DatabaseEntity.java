@@ -32,6 +32,8 @@ public class DatabaseEntity {
     @NotBlank
     private Long createdAt;
 
+    private String status;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "database_instances",
             joinColumns = @JoinColumn(name = "databaseId"),

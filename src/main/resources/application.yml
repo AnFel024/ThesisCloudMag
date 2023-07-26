@@ -1,25 +1,18 @@
 server:
   port: 8081
 
-github:
-  gh-credentials: "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"
-
 spring:
   datasource:
     url: jdbc:postgresql://3.94.187.190:5432/test
     username: postgres
     password: 123987
 
-docker:
-  credentials: dckr_pat_YCRgPSgNzc96jr5EL2oeUgVSsqM
-
 aws-credentials:
-  aws-public-key: "AKIAZOW6FHBCJVU3OA7O"
-  aws-private-key: "iy/pruCQO/bxsGsFIUYsPSWacDqsMlKVziXufCKO"
+  aws-public-key: ${AWS_CREDENTIALS_PUBLIC_KEY}
+  aws-private-key: ${AWS_CREDENTIALS_PRIVATE_KEY}
 
-azure-credentials:
-  azure-key-value: "AfG8Q~to7~4wUYLmvMSQnvCYQsGNC1kYWBe~gcUj"
-  azure-secret-id: "2e47b8b8-365e-4a34-9a76-f96367cb762f"
-  azure-subscription-id: "83ae92e9-b2dd-4c6c-ab1b-7e3e1c59d1d6"
-  azure-tenant-id: "d51388ef-6ab0-4363-9f94-d56644a45970"
-  azure-client-id: "1819a9ec-7fdb-4b66-84d5-0eb0595e3597"
+github:
+  gh-credentials: ${GITHUB_TOKEN}
+
+jenkins:
+  credentials: ${JENKINS_TOKEN}

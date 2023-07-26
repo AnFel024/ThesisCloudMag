@@ -2,24 +2,24 @@ package com.antithesis.cloudmag.service;
 
 import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.GitHubClient;
-import com.antithesis.cloudmag.client.responses.GitHubResponse;
+import com.antithesis.cloudmag.client.JenkinsClient;
+import com.antithesis.cloudmag.client.responses.GitHubCreateRepositoryResponse;
 import com.antithesis.cloudmag.controller.payload.request.CreateAppDto;
 import com.antithesis.cloudmag.controller.payload.request.CreateDatabaseDto;
-import com.antithesis.cloudmag.controller.payload.request.CreateTaskDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
 import com.antithesis.cloudmag.entity.*;
 import com.antithesis.cloudmag.mapper.DatabaseMapper;
 import com.antithesis.cloudmag.mapper.ProjectMapper;
-import com.antithesis.cloudmag.mapper.TaskMapper;
 import com.antithesis.cloudmag.model.Database;
 import com.antithesis.cloudmag.model.Project;
-import com.antithesis.cloudmag.model.Task;
 import com.antithesis.cloudmag.repository.*;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
 import software.amazon.awssdk.services.ec2.model.InstanceType;
 import software.amazon.awssdk.services.ec2.model.RunInstancesResponse;
 
@@ -41,11 +41,10 @@ public class ProjectService {
     private final GitHubClient gitHubClient;
     private final AWSManagementService awsManagementService;
     private final AzureManagementService azureManagementService;
-    private final TaskRepository taskRepository;
     private final ProjectMapper projectMapper;
     private final DogStatsdClient dogStatsdClient;
+    private final JenkinsClient jenkinsClient;
     private final DatabaseMapper databaseMapper;
-    private final TaskMapper taskMapper;
 
     public MessageResponse<?> createProject(CreateAppDto createAppDto) {
         if (projectRepository.existsByName(createAppDto.getName())) {
@@ -69,13 +68,13 @@ public class ProjectService {
             instanceEntity = getInstance(virtualMachine);
         }
 
-        GitHubResponse gitHubClientRepository = gitHubClient.createRepository(
+        GitHubCreateRepositoryResponse gitHubClientRepository = gitHubClient.createRepository(
                 Strings.concat("tesisV1", createAppDto.getName()));
         createProject(createAppDto, instanceEntity, gitHubClientRepository.getHtmlUrl());
 
         return MessageResponse.builder()
-                .message(format(
-                        "Se ha creado correctamente el projecto con nombre %s",
+                .message(
+                        format("Se ha creado correctamente el projecto con nombre %s",
                         createAppDto.getName()))
                 .status(HttpStatus.CREATED)
                 .build();
@@ -118,22 +117,29 @@ public class ProjectService {
         return instanceEntity;
     }
 
-    public MessageResponse<?> createDatabase(CreateDatabaseDto createDatabaseDto, String userOwner) {
+    public MessageResponse<String> createDatabase(CreateDatabaseDto createDatabaseDto, String userOwner) {
         if (databaseRepository.existsByName(createDatabaseDto.getName())) {
-            return MessageResponse.builder()
+            return MessageResponse.<String>builder()
                     .message("Error: Database name already exist!")
                     .status(HttpStatus.BAD_REQUEST)
                     .build();
         }
         UserEntity userEntity = userRepository.findById(userOwner).orElseThrow(() -> new RuntimeException("User not found"));
+        // Validar estos jobs, salen mas facil.
+        String randomPass = RandomStringUtils.randomAlphabetic(10);
+        Boolean success = jenkinsClient.triggerJob(
+                createDatabaseDto.getAppOrg(), createDatabaseDto.getAppUrl(), createDatabaseDto.getAppName(),
+                createDatabaseDto.getBranchName(), "",createDatabaseDto.getBranchType());
         DatabaseEntity project = DatabaseEntity.builder()
                 .name(createDatabaseDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
                 .dbms(createDatabaseDto.getDbms_type())
                 .creator(userEntity)
+                .status(success ? "PENDING" : "FAILED")
                 .build();
         databaseRepository.save(project);
-        return MessageResponse.builder()
+        return MessageResponse.<String>builder()
+                .data("La contraseña generada es: " + randomPass + ". Almacenela bien pues no podra ser restablecida")
                 .message(format(
                         "Se ha creado correctamente la base de datos con nombre %s en %s",
                         createDatabaseDto.getName(), createDatabaseDto.getDbms_type()))
@@ -141,7 +147,7 @@ public class ProjectService {
                 .build();
     }
 
-    public MessageResponse<List<Project>> listProjects(String userOwner) {
+    public MessageResponse<List<Project>> listProjects() {
         // TODO pasar long fecha a localdatetime
         dogStatsdClient.sendMetric();
         List<ProjectEntity> allByCreator = projectRepository.findAll();
@@ -162,41 +168,6 @@ public class ProjectService {
                 .build();
     }
 
-
-    public MessageResponse<List<Task>> listTasks() {
-        // TODO pasar long fecha a localdatetime
-        dogStatsdClient.sendMetric();
-        List<Task> projects = taskRepository.findAll().stream().map(taskMapper::mapToTask).toList();
-        return MessageResponse.<List<Task>>builder()
-                .data(projects)
-                .status(HttpStatus.OK)
-                .build();
-    }
-
-    public MessageResponse<?> createTask(CreateTaskDto createTaskDto, String userName) {
-        if (taskRepository.existsByName(createTaskDto.getName())) {
-            return MessageResponse.builder()
-                    .message(format("Error: Task name %s already exist!", createTaskDto.getName()))
-                    .status(HttpStatus.BAD_REQUEST)
-                    .build();
-        }
-        UserEntity userEntity = userRepository.findById(userName).orElseThrow(() -> new RuntimeException("User not found"));
-        TaskEntity project = TaskEntity.builder()
-                .name(createTaskDto.getName())
-                .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
-                .concurrentUrl(createTaskDto.getAction_url())
-                .scheduledTime(createTaskDto.getCrontab_rule())
-                .creator(userEntity)
-                .build();
-        taskRepository.save(project);
-        return MessageResponse.builder()
-                .message(format(
-                        "Se ha creado correctamente la tarea con nombre %s que correra cada %s",
-                        createTaskDto.getName(), createTaskDto.getCrontab_rule()))
-                .status(HttpStatus.CREATED)
-                .build();
-    }
-
     public MessageResponse<?> deleteProject(String userName, String projectName) {
         // TODO Validar permisos de borrado
         projectRepository.deleteByName(projectName);
@@ -206,11 +177,24 @@ public class ProjectService {
                 .build();
     }
 
-    public MessageResponse<?> deleteTask(String userName, String taskName) {
-        // TODO Validar permisos de borrado
-        taskRepository.deleteByName(taskName);
+    public MessageResponse validateInstanceStatus() {
+        DescribeInstancesResponse describeInstancesResponse = awsManagementService.validateInstanceHealth();
+        List<ProjectEntity> projectEntities = projectRepository.findAll();
+        projectEntities.stream().filter(projectEntity -> "PENDING".equals(projectEntity.getStatus())).forEach(projectEntity -> {
+            describeInstancesResponse.reservations().forEach(reservation -> {
+                reservation.instances().forEach(instance -> {
+                    if (projectEntity.getInstanceInfo().getId().equals(instance.instanceId())) {
+                        InstanceEntity instanceEntity = instanceRepository.findById(instance.instanceId()).get();
+                        instanceEntity.setHostUrl(instance.publicDnsName());
+                        projectEntity.setInstanceInfo(instanceEntity);
+                        projectEntity.setStatus("RUNNING");
+                        projectRepository.save(projectEntity);
+                    }
+                });
+            });
+        });
         return MessageResponse.builder()
-                .message(format("Se ha eliminado correctamente la tarea %s", taskName))
+                .message("Se ha validado el estado de las instancias")
                 .status(HttpStatus.OK)
                 .build();
     }

@@ -32,11 +32,16 @@ dependencies {
     // Guava
     implementation 'com.google.guava:guava:31.1-jre'
 
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     implementation 'org.postgresql:postgresql:42.6.0'
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:3.0.5'
@@ -61,7 +66,12 @@ dependencies {
     implementation 'software.amazon.awssdk:ec2:2.20.27'
 
     // https://mvnrepository.com/artifact/com.azure/azure-identity
-    implementation 'com.azure:azure-identity:1.9.0'
+    implementation('com.azure:azure-identity:1.9.0') {
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+        //:
+        //com.fasterxml.jackson.core:jackson-databind:2.15.2
+    }
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2
     implementation 'org.springframework.boot:spring-boot-starter-log4j2:3.1.1'
@@ -70,10 +80,16 @@ dependencies {
     implementation 'com.datadoghq:java-dogstatsd-client:4.2.0'
 
     // https://mvnrepository.com/artifact/com.azure.resourcemanager/azure-resourcemanager-resources
-    implementation 'com.azure.resourcemanager:azure-resourcemanager:2.28.0'
+    implementation('com.azure.resourcemanager:azure-resourcemanager:2.28.0') {
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
+        //:
+        //com.fasterxml.jackson.core:jackson-databind:2.15.2
+    }
 
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    // https://mvnrepository.com/artifact/com.azure/azure-sdk-bom
+    implementation 'com.azure:azure-sdk-bom:1.2.14'
+
 
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 
