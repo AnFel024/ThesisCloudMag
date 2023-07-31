@@ -20,5 +20,6 @@ public class Deploy {
     private Instance instanceInfo;
     private Version versionInfo;
     private User creator;
+    private String status;
 }
 

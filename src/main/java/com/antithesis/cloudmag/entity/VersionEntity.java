@@ -23,18 +23,12 @@ public class VersionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private Long createdAt;
-
     @NotBlank
     private String name;
-
-    @NotBlank
     private String description;
-
     @NotBlank
     private String tagName;
-
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)

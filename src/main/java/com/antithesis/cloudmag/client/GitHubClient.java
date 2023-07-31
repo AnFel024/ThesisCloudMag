@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 
@@ -25,7 +26,7 @@ public class GitHubClient {
     /*
     curl --location 'https://api.github.com/repos/cloudmag-tesis/spring-template/generate' \
         --header 'Accept: application/vnd.github+json' \
-        --header 'Authorization: Bearer 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' \
+        --header 'Authorization: Bearer ' \
         --header 'Content-Type: application/json' \
         --header 'Cookie: _octo=GH1.1.1705964187.1680918574; logged_in=no' \
         --data '{
@@ -47,13 +48,13 @@ public class GitHubClient {
     @SneakyThrows
     public GitHubCreateRepositoryResponse createRepository(String repositoryName) {
         URI targetURI = new URI(format(CREATE_REPO_TARGET_URL, BASE_URL));
-        String body = String.join("&", List.of(
-                "name="+repositoryName,
-                "owner="+"cloudmag-tesis",
-                "description="+"Generated template",
-                "include_all_branches="+"false",
-                "private="+"true"
-        ));
+        Map<String, Object > body = Map.of(
+                "name",repositoryName,
+                "owner","cloudmag-tesis",
+                "description","Generated template",
+                "include_all_branches",false,
+                "private",true
+        );
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(targetURI)
                 .header("Authorization", "token " + GAT)

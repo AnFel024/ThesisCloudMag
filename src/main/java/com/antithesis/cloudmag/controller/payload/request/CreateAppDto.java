@@ -9,5 +9,4 @@ public class CreateAppDto {
 	private String cloud_provider;
 	private String name;
 	private String username;
-	private Boolean http_access_allowed;
 }

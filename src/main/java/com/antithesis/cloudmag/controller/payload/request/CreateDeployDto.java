@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class CreateDeployDto extends JenkinsDto {
 	private String username;
-	private String projectName;
 	private String ipDir;
 	private String tag;
 }

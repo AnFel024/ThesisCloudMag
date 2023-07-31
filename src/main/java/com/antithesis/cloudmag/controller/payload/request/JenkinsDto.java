@@ -15,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class JenkinsDto {
     private String token;
-    private String appOrg;
     private String appUrl;
     private String appName;
     private String branchName;

@@ -53,6 +53,8 @@ public class ProjectService {
                     .status(HttpStatus.BAD_REQUEST)
                     .build();
         }
+        GitHubCreateRepositoryResponse gitHubClientRepository = gitHubClient.createRepository(
+                Strings.concat("tesisV1", createAppDto.getName()));
         InstanceEntity instanceEntity;
 
         if (createAppDto.getCloud_provider().equals("AWS")) {
@@ -67,9 +69,6 @@ public class ProjectService {
                     createAppDto.getName());
             instanceEntity = getInstance(virtualMachine);
         }
-
-        GitHubCreateRepositoryResponse gitHubClientRepository = gitHubClient.createRepository(
-                Strings.concat("tesisV1", createAppDto.getName()));
         createProject(createAppDto, instanceEntity, gitHubClientRepository.getHtmlUrl());
 
         return MessageResponse.builder()
@@ -127,9 +126,8 @@ public class ProjectService {
         UserEntity userEntity = userRepository.findById(userOwner).orElseThrow(() -> new RuntimeException("User not found"));
         // Validar estos jobs, salen mas facil.
         String randomPass = RandomStringUtils.randomAlphabetic(10);
-        Boolean success = jenkinsClient.triggerJob(
-                createDatabaseDto.getAppOrg(), createDatabaseDto.getAppUrl(), createDatabaseDto.getAppName(),
-                createDatabaseDto.getBranchName(), "",createDatabaseDto.getBranchType());
+        Boolean success = jenkinsClient.triggerDatabaseJob( createDatabaseDto.getAppUrl(), createDatabaseDto.getAppName(),
+                createDatabaseDto.getBranchName(), "");
         DatabaseEntity project = DatabaseEntity.builder()
                 .name(createDatabaseDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
@@ -188,6 +186,7 @@ public class ProjectService {
                         instanceEntity.setHostUrl(instance.publicDnsName());
                         projectEntity.setInstanceInfo(instanceEntity);
                         projectEntity.setStatus("RUNNING");
+                        jenkinsClient.triggerScaffoldingJob(instance.publicDnsName());
                         projectRepository.save(projectEntity);
                     }
                 });

@@ -32,13 +32,17 @@ public class VersionService {
 
 
     public MessageResponse<?> createVersion(CreateVersionDto createVersionDto) {
+        String branchName = createVersionDto.getBranchName();
+        if (!"master".equals(createVersionDto.getBranchName())
+                && !"develop".equals(createVersionDto.getBranchType())
+                && !"main".equals(createVersionDto.getBranchType())) {
+            branchName = createVersionDto.getBranchType() + "/" + createVersionDto.getBranchName();
+        }
         Boolean versionTriggered = jenkinsClient.triggerJob(
-                createVersionDto.getAppOrg(),
                 createVersionDto.getAppUrl(),
                 createVersionDto.getAppName(),
-                createVersionDto.getBranchName(),
-                createVersionDto.getTag(),
-                createVersionDto.getBranchType()
+                branchName,
+                createVersionDto.getTag()
         );
         VersionEntity versionEntity = VersionEntity.builder()
                 .name(createVersionDto.getName())

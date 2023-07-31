@@ -24,6 +24,7 @@ public class Version {
     private String name;
     private String description;
     private String tagName;
+    private String status;
     private User creator;
     private Project projectInfo;
 }
