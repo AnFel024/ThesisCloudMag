@@ -15,7 +15,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(	name = "databases")
+@Table(	name = "databases",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "id"),
+                @UniqueConstraint(columnNames = "name")
+        })
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DatabaseEntity {
@@ -29,8 +33,9 @@ public class DatabaseEntity {
     @NotBlank
     private String dbms;
 
-    @NotBlank
     private Long createdAt;
+
+    private String initialPassword;
 
     private String status;
 

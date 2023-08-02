@@ -37,16 +37,11 @@ public class JenkinsClient {
     }
 
     @SneakyThrows
-    public Boolean triggerDatabaseJob(String appUrl,
-                              String appName,
-                              String branchName,
-                              String versionTag) {
+    public Boolean triggerDatabaseJob(String ipDir, String dbPass, String jobName) {
         String params = String.join("&", java.util.List.of("token=my_token",
-                "app_name="+ appName,
-                "app_url=" + appUrl,
-                "branch_name=" + branchName,
-                "version_tag=" + versionTag));
-        return triggerInJenkins(params, "database");
+                "db_pass="+ dbPass,
+                "ip_dir="+ ipDir));
+        return triggerInJenkins(params, jobName);
     }
 
     @SneakyThrows

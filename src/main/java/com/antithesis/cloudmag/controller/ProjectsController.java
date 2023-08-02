@@ -37,18 +37,18 @@ public class ProjectsController {
         return ResponseUtils.validateResponse(projectService.createProject(createAppDto));
     }
 
-    @PostMapping("/create-database/user/{user_id}")
-    public ResponseEntity<?> createDDBB(@Valid @RequestBody CreateDatabaseDto createDatabaseDto, @PathVariable String user_id) {
-        return ResponseUtils.validateResponse(projectService.createDatabase(createDatabaseDto, user_id));
-    }
-
-    @DeleteMapping("/user/{user_id}/name/{project_name}")
-    public ResponseEntity<?> deleteProject(@PathVariable String user_id, @PathVariable String project_name) {
-        return ResponseUtils.validateResponse(projectService.deleteProject(user_id, project_name));
+    @PostMapping("/create-database")
+    public ResponseEntity<?> createDDBB(@Valid @RequestBody CreateDatabaseDto createDatabaseDto) {
+        return ResponseUtils.validateResponse(projectService.createDatabase(createDatabaseDto));
     }
 
     @GetMapping("/validate-instances")
     public ResponseEntity<?> testInstance() {
         return ResponseEntity.ok().body(projectService.validateInstanceStatus());
+    }
+
+    @DeleteMapping("/{name}")
+    public ResponseEntity<?> deleteProject(@PathVariable String name) {
+        return ResponseEntity.ok().body(projectService.deleteProject(name));
     }
 }

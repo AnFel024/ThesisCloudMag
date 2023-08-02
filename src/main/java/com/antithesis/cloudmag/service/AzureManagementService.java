@@ -11,6 +11,7 @@ import com.azure.resourcemanager.compute.models.KnownLinuxVirtualMachineImage;
 import com.azure.resourcemanager.compute.models.PublicIpAddressSku;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
 import com.azure.resourcemanager.compute.models.VirtualMachineSizeTypes;
+import com.azure.resourcemanager.network.models.PublicIpAddress;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,13 +42,13 @@ public class AzureManagementService {
         return azureResourceManager.virtualMachines()
                 .define(name)
                 .withRegion(REGION)
-                .withNewResourceGroup("tesis-1-ip")
+                .withExistingResourceGroup(GROUP_NAME)
                 .withNewPrimaryNetwork("10.0.0.0/24")
                 .withPrimaryPrivateIPAddressDynamic()
                 .withNewPrimaryPublicIPAddress(name + "-ip")
                 .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_20_04_LTS)
                 .withRootUsername("testUser")
-                .withSsh("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC7x6dZvODwhSV+SplyrDFpKMU98dSlfWEkRJUdZ6HbbHAARS2uvWBQ/dqO83AcvvvZABj8xeyxAjMWVebXb6daCPYya051PvufWA/O8FDIvo1NsAlcB0r4IldbsofrETnAfBJXGxqnS5LV8x1N3PWfAVus4OFaO0RPTwH27BFSHDtuWJvww8/GjzckJdb8xWJq7jNoReJXnyWDYUC+hjvMEiGQEb5nwcsDK4FwFfaXTuuHvMpldmNji6QAQg6BdGcAKsvWpAP/NPrae0gEio11DqMo6ONbUS2mAwu05rDsbLLKgXMaUiZHIlPq0s+TKAJ8sUiNtSB9niDp897j54YZF0lca9/eoJnqeDQHoFjdsYj6woPc1OcB6kVa1B9RVxmUEmQVoiwRQ2Heesqkrbote2LHZBDWnpdD07/GSr1/EM4kIdPDiclMRv7kgnF05Q02AJ8SypT0Cot2XH2FAMEfzH0zQlMRpbwgLlvbEVK3QfBbLgANiPRYu8Blw2xYqyL+7iT9asQ0XTwr315jx+x2xNzJ3Ek8mlxPQ17+Et3EIkNycxEyO1iGQGJv9ospzVX3l2wT7Ymc8Augucq3V2EBjAljAIFlVAB5ztjmOlxXONnay1YBeqkOF237LhM/pQHq09bZhEedMZJVQl9i5BcXfjd8DTPY4ET54j5v43dMJQ== -anfelpe.0200@gmail.com")
+                .withSsh("ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBACTxswppM9TgmAAe4ysKVu0h9Y7T8LoX4G6WSkSuLfkM454o/h+uX7DOJonNa/JfGErGma1h3aGUCQ4rp9COV/5fgEiJqkDRxJyI2WL+Xn49rWLNy/Qo5pgRfzAvuQgW15DwUkHI/6uGFdCP+dxPpnwp05KzO6UG0QUiVMfKJntYAnbYg== anfelpe.0200@gmail.com")
                 .withSize(VirtualMachineSizeTypes.STANDARD_D2S_V3)
                 .create();
     }

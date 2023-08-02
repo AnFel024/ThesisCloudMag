@@ -11,7 +11,6 @@ import org.mapstruct.Mapping;
 })
 public interface UserMapper {
 
-    @Mapping(target = "password", ignore = true)
     User mapToUser(UserEntity userEntity);
 
 }

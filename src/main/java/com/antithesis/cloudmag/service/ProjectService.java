@@ -27,12 +27,19 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class ProjectService {
+
+    private static final String POSTGRES_TRIGGER = "database_postgres";
+
+    private static final String MYSQL_TRIGGER = "database_mysql";
+
+    private static final String ORACLE_TRIGGER = "database_oracle";
 
     private final ProjectRepository projectRepository;
     private final DatabaseRepository databaseRepository;
@@ -116,28 +123,31 @@ public class ProjectService {
         return instanceEntity;
     }
 
-    public MessageResponse<String> createDatabase(CreateDatabaseDto createDatabaseDto, String userOwner) {
+    public MessageResponse<String> createDatabase(CreateDatabaseDto createDatabaseDto) {
         if (databaseRepository.existsByName(createDatabaseDto.getName())) {
             return MessageResponse.<String>builder()
                     .message("Error: Database name already exist!")
                     .status(HttpStatus.BAD_REQUEST)
                     .build();
         }
-        UserEntity userEntity = userRepository.findById(userOwner).orElseThrow(() -> new RuntimeException("User not found"));
-        // Validar estos jobs, salen mas facil.
+        UserEntity userEntity = userRepository.findById(createDatabaseDto.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+        RunInstancesResponse runInstancesResponse = awsManagementService.generateInstance(
+                InstanceType.fromValue("t2.micro"));
+        var instanceEntity = getInstance(runInstancesResponse);
         String randomPass = RandomStringUtils.randomAlphabetic(10);
-        Boolean success = jenkinsClient.triggerDatabaseJob( createDatabaseDto.getAppUrl(), createDatabaseDto.getAppName(),
-                createDatabaseDto.getBranchName(), "");
+        final String db_user = "mysql".equals(createDatabaseDto.getDbms_type()) ? "user" : "postgres";
         DatabaseEntity project = DatabaseEntity.builder()
                 .name(createDatabaseDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
                 .dbms(createDatabaseDto.getDbms_type())
                 .creator(userEntity)
-                .status(success ? "PENDING" : "FAILED")
+                .initialPassword(randomPass)
+                .status("PENDING")
+                .instanceInfo(instanceEntity)
                 .build();
         databaseRepository.save(project);
         return MessageResponse.<String>builder()
-                .data("La contraseña generada es: " + randomPass + ". Almacenela bien pues no podra ser restablecida")
+                .data("La contraseña generada es: " + randomPass + " con nombre de usuario: user. Se recomienda cambiarla una vez la base de datos este creada")
                 .message(format(
                         "Se ha creado correctamente la base de datos con nombre %s en %s",
                         createDatabaseDto.getName(), createDatabaseDto.getDbms_type()))
@@ -166,15 +176,6 @@ public class ProjectService {
                 .build();
     }
 
-    public MessageResponse<?> deleteProject(String userName, String projectName) {
-        // TODO Validar permisos de borrado
-        projectRepository.deleteByName(projectName);
-        return MessageResponse.builder()
-                .message(format("Se ha eliminado correctamente el proyecto %s", projectName))
-                .status(HttpStatus.OK)
-                .build();
-    }
-
     public MessageResponse validateInstanceStatus() {
         DescribeInstancesResponse describeInstancesResponse = awsManagementService.validateInstanceHealth();
         List<ProjectEntity> projectEntities = projectRepository.findAll();
@@ -192,9 +193,61 @@ public class ProjectService {
                 });
             });
         });
+        List<DatabaseEntity> databaseEntities = databaseRepository.findAll();
+        databaseEntities.stream().filter(projectEntity -> "PENDING".equals(projectEntity.getStatus())).forEach(projectEntity -> {
+            describeInstancesResponse.reservations().forEach(reservation -> {
+                reservation.instances().forEach(instance -> {
+                    if (projectEntity.getInstanceInfo().getId().equals(instance.instanceId())) {
+                        InstanceEntity instanceEntity = instanceRepository.findById(instance.instanceId()).get();
+                        instanceEntity.setHostUrl(instance.publicDnsName());
+                        projectEntity.setInstanceInfo(instanceEntity);
+                        projectEntity.setStatus("RUNNING");
+                        if ("postgres".equals(projectEntity.getDbms())) {
+                            jenkinsClient.triggerDatabaseJob(instance.publicDnsName(), projectEntity.getInitialPassword(), POSTGRES_TRIGGER);
+                        }
+                        if ("mysql".equals(projectEntity.getDbms())) {
+                            jenkinsClient.triggerDatabaseJob(instance.publicDnsName(), projectEntity.getInitialPassword(), MYSQL_TRIGGER);
+                        }
+                        databaseRepository.save(projectEntity);
+                    }
+                });
+            });
+        });
         return MessageResponse.builder()
                 .message("Se ha validado el estado de las instancias")
                 .status(HttpStatus.OK)
                 .build();
+    }
+
+    public MessageResponse deleteProject(String name) {
+        Optional<ProjectEntity> project = projectRepository.findByName(name);
+        if (project.isPresent()) {
+            ProjectEntity projectEntity = project.get();
+            boolean terminateOnProvider = terminateOnProvider(projectEntity);
+            boolean deleteRepository = gitHubClient.deleteRepository("tesisV1" + projectEntity.getName());
+            if (!terminateOnProvider || !deleteRepository) {
+                return MessageResponse.builder()
+                        .message("No se ha podido eliminar el proyecto, valide los logs para detallar el error")
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .build();
+            }
+            projectEntity.setStatus("DELETED");
+            projectRepository.save(projectEntity);
+            return MessageResponse.builder()
+                    .message("Se ha eliminado el proyecto")
+                    .status(HttpStatus.OK)
+                    .build();
+        }
+        return MessageResponse.builder()
+                .message("No se ha encontrado el proyecto")
+                .status(HttpStatus.NOT_FOUND)
+                .build();
+    }
+
+    private boolean terminateOnProvider(ProjectEntity projectEntity) {
+        if ("AWS".equals(projectEntity.getInstanceInfo().getProvider())) {
+            return awsManagementService.terminateInstance(projectEntity.getInstanceInfo().getId());
+        }
+        return awsManagementService.terminateInstance(projectEntity.getInstanceInfo().getId());
     }
 }
