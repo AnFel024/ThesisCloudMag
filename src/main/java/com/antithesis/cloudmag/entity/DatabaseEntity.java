@@ -40,10 +40,10 @@ public class DatabaseEntity {
     private String status;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(	name = "database_instances",
+    @JoinTable(	name = "database_project",
             joinColumns = @JoinColumn(name = "databaseId"),
-            inverseJoinColumns = @JoinColumn(name = "instanceId"))
-    private InstanceEntity instanceInfo;
+            inverseJoinColumns = @JoinColumn(name = "projectId"))
+    private ProjectEntity projectInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "database_users",

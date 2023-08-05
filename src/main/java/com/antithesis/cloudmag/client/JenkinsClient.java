@@ -37,8 +37,9 @@ public class JenkinsClient {
     }
 
     @SneakyThrows
-    public Boolean triggerDatabaseJob(String ipDir, String dbPass, String jobName) {
+    public Boolean triggerDatabaseJob(String ipDir, String dbPass, String jobName, String dbName) {
         String params = String.join("&", java.util.List.of("token=my_token",
+                "db_name="+ dbName,
                 "db_pass="+ dbPass,
                 "ip_dir="+ ipDir));
         return triggerInJenkins(params, jobName);
@@ -47,6 +48,7 @@ public class JenkinsClient {
     @SneakyThrows
     public Boolean triggerDeployJob(String dockerImageName, String dockerImageTag, String ipDir) {
         String params = String.join("&", java.util.List.of("token=my_token",
+                "app_name=" + dockerImageName,
                 "docker_container_name=" + dockerImageName,
                 "docker_image_name=" + dockerImageName,
                 "docker_image_tag=" + dockerImageTag,
@@ -55,8 +57,9 @@ public class JenkinsClient {
     }
 
     @SneakyThrows
-    public Boolean triggerScaffoldingJob(String ipDir) {
+    public Boolean triggerScaffoldingJob(String ipDir, String appName) {
         String params = String.join("&", java.util.List.of("token=my_token",
+                "app_name=" + appName,
                 "ip_dir=" + ipDir));
         return triggerInJenkins(params, "approvisionate");
     }

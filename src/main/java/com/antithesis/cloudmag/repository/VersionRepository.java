@@ -13,4 +13,6 @@ public interface VersionRepository extends JpaRepository<VersionEntity, UUID> {
     @Query("SELECT v FROM VersionEntity v WHERE v.projectInfo.name = ?1")
     List<VersionEntity> findAllByProjectInfoName(String name);
     List<VersionEntity> findAll();
+
+    VersionEntity findByTagName(String tagName);
 }

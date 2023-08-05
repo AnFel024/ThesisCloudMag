@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface DeployRepository extends JpaRepository<DeployEntity, Long> {
-    @Query("SELECT v FROM VersionEntity v WHERE v.projectInfo.name = ?1")
-    List<VersionEntity> findAllByProjectInfoName(String name);
+    @Query("SELECT v FROM DeployEntity v WHERE v.versionInfo.projectInfo.name = ?1")
+    List<DeployEntity> findAllByProjectInfoName(String name);
 
     List<DeployEntity> findAll();
 }

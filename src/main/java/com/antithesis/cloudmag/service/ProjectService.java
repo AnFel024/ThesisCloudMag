@@ -54,12 +54,16 @@ public class ProjectService {
     private final DatabaseMapper databaseMapper;
 
     public MessageResponse<?> createProject(CreateAppDto createAppDto) {
-        if (projectRepository.existsByName(createAppDto.getName())) {
-            return MessageResponse.builder()
-                    .message("Error: Project name already exist!")
-                    .status(HttpStatus.BAD_REQUEST)
-                    .build();
-        }
+        createProjectInfo(createAppDto);
+        return MessageResponse.builder()
+                .message(
+                        format("Se ha creado correctamente el projecto con nombre %s",
+                        createAppDto.getName()))
+                .status(HttpStatus.CREATED)
+                .build();
+    }
+
+    private ProjectEntity createProjectInfo(CreateAppDto createAppDto) {
         GitHubCreateRepositoryResponse gitHubClientRepository = gitHubClient.createRepository(
                 Strings.concat("tesisV1", createAppDto.getName()));
         InstanceEntity instanceEntity;
@@ -76,17 +80,10 @@ public class ProjectService {
                     createAppDto.getName());
             instanceEntity = getInstance(virtualMachine);
         }
-        createProject(createAppDto, instanceEntity, gitHubClientRepository.getHtmlUrl());
-
-        return MessageResponse.builder()
-                .message(
-                        format("Se ha creado correctamente el projecto con nombre %s",
-                        createAppDto.getName()))
-                .status(HttpStatus.CREATED)
-                .build();
+        return createProject(createAppDto, instanceEntity, gitHubClientRepository.getHtmlUrl());
     }
 
-    private void createProject(CreateAppDto createAppDto, InstanceEntity instanceEntity, String repositoryUrl) {
+    private ProjectEntity createProject(CreateAppDto createAppDto, InstanceEntity instanceEntity, String repositoryUrl) {
         UserEntity userEntity = userRepository.findById(createAppDto.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
         ProjectEntity projectEntity = ProjectEntity.builder()
                 .name(createAppDto.getName())
@@ -96,7 +93,7 @@ public class ProjectService {
                 .status("PENDING")
                 .creator(userEntity)
                 .build();
-        projectRepository.save(projectEntity);
+        return projectRepository.save(projectEntity);
     }
 
     private InstanceEntity getInstance(RunInstancesResponse runInstancesResponse) {
@@ -131,11 +128,13 @@ public class ProjectService {
                     .build();
         }
         UserEntity userEntity = userRepository.findById(createDatabaseDto.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
-        RunInstancesResponse runInstancesResponse = awsManagementService.generateInstance(
-                InstanceType.fromValue("t2.micro"));
-        var instanceEntity = getInstance(runInstancesResponse);
+        ProjectEntity aws = createProjectInfo(CreateAppDto.builder()
+                .cloud_provider("AWS")
+                .instance_type("t2.micro")
+                .username(createDatabaseDto.getUsername())
+                .name(createDatabaseDto.getName())
+                .build());
         String randomPass = RandomStringUtils.randomAlphabetic(10);
-        final String db_user = "mysql".equals(createDatabaseDto.getDbms_type()) ? "user" : "postgres";
         DatabaseEntity project = DatabaseEntity.builder()
                 .name(createDatabaseDto.getName())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
@@ -143,7 +142,7 @@ public class ProjectService {
                 .creator(userEntity)
                 .initialPassword(randomPass)
                 .status("PENDING")
-                .instanceInfo(instanceEntity)
+                .projectInfo(aws)
                 .build();
         databaseRepository.save(project);
         return MessageResponse.<String>builder()
@@ -183,38 +182,40 @@ public class ProjectService {
             describeInstancesResponse.reservations().forEach(reservation -> {
                 reservation.instances().forEach(instance -> {
                     if (projectEntity.getInstanceInfo().getId().equals(instance.instanceId())) {
-                        InstanceEntity instanceEntity = instanceRepository.findById(instance.instanceId()).get();
-                        instanceEntity.setHostUrl(instance.publicDnsName());
-                        projectEntity.setInstanceInfo(instanceEntity);
-                        projectEntity.setStatus("RUNNING");
-                        jenkinsClient.triggerScaffoldingJob(instance.publicDnsName());
+                        projectEntity.getInstanceInfo().setHostUrl(instance.publicDnsName());
+                        projectEntity.setStatus("APPROACHING");
+                        jenkinsClient.triggerScaffoldingJob(instance.publicDnsName(), projectEntity.getName());
                         projectRepository.save(projectEntity);
-                    }
-                });
-            });
-        });
-        List<DatabaseEntity> databaseEntities = databaseRepository.findAll();
-        databaseEntities.stream().filter(projectEntity -> "PENDING".equals(projectEntity.getStatus())).forEach(projectEntity -> {
-            describeInstancesResponse.reservations().forEach(reservation -> {
-                reservation.instances().forEach(instance -> {
-                    if (projectEntity.getInstanceInfo().getId().equals(instance.instanceId())) {
-                        InstanceEntity instanceEntity = instanceRepository.findById(instance.instanceId()).get();
-                        instanceEntity.setHostUrl(instance.publicDnsName());
-                        projectEntity.setInstanceInfo(instanceEntity);
-                        projectEntity.setStatus("RUNNING");
-                        if ("postgres".equals(projectEntity.getDbms())) {
-                            jenkinsClient.triggerDatabaseJob(instance.publicDnsName(), projectEntity.getInitialPassword(), POSTGRES_TRIGGER);
-                        }
-                        if ("mysql".equals(projectEntity.getDbms())) {
-                            jenkinsClient.triggerDatabaseJob(instance.publicDnsName(), projectEntity.getInitialPassword(), MYSQL_TRIGGER);
-                        }
-                        databaseRepository.save(projectEntity);
                     }
                 });
             });
         });
         return MessageResponse.builder()
                 .message("Se ha validado el estado de las instancias")
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    public MessageResponse validateDatabaseStatus() {
+        DescribeInstancesResponse describeInstancesResponse = awsManagementService.validateInstanceHealth();
+        List<DatabaseEntity> databaseEntities = databaseRepository.findAll();
+        databaseEntities.stream().filter(databaseEntity -> "PENDING".equals(databaseEntity.getStatus())).forEach(databaseEntity -> {
+            describeInstancesResponse.reservations().forEach(reservation -> reservation.instances().forEach(instance -> {
+                if (databaseEntity.getProjectInfo().getInstanceInfo().getId().equals(instance.instanceId()) && "CREATED".equals(databaseEntity.getProjectInfo().getStatus())) {
+                    databaseEntity.getProjectInfo().getInstanceInfo().setHostUrl(instance.publicDnsName());
+                    if ("postgres".equals(databaseEntity.getDbms())) {
+                        jenkinsClient.triggerDatabaseJob(instance.publicDnsName(), databaseEntity.getInitialPassword(), POSTGRES_TRIGGER, databaseEntity.getName());
+                    }
+                    if ("mysql".equals(databaseEntity.getDbms())) {
+                        jenkinsClient.triggerDatabaseJob(instance.publicDnsName(), databaseEntity.getInitialPassword(), MYSQL_TRIGGER, databaseEntity.getName());
+                    }
+                    databaseEntity.setStatus("APPROACHING");
+                    databaseRepository.save(databaseEntity);
+                }
+            }));
+        });
+        return MessageResponse.builder()
+                .message("Se ha validado el estado de las bases de datos")
                 .status(HttpStatus.OK)
                 .build();
     }

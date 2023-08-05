@@ -62,10 +62,7 @@ public class WebSecurityConfig {
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeHttpRequests()
             .requestMatchers("/user/auth/**").permitAll()
-            .requestMatchers("/project/**").permitAll()
-            .requestMatchers("/version/**").permitAll()
-            .requestMatchers("/user/**").permitAll()
-            .requestMatchers("/hello_world").permitAll()
+            .requestMatchers("/validate/**").permitAll()
             .anyRequest().authenticated();
 
     http.authenticationProvider(authenticationProvider());

@@ -48,7 +48,7 @@ public class AzureManagementService {
                 .withNewPrimaryPublicIPAddress(name + "-ip")
                 .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_20_04_LTS)
                 .withRootUsername("testUser")
-                .withSsh("ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1MjEAAACFBACTxswppM9TgmAAe4ysKVu0h9Y7T8LoX4G6WSkSuLfkM454o/h+uX7DOJonNa/JfGErGma1h3aGUCQ4rp9COV/5fgEiJqkDRxJyI2WL+Xn49rWLNy/Qo5pgRfzAvuQgW15DwUkHI/6uGFdCP+dxPpnwp05KzO6UG0QUiVMfKJntYAnbYg== anfelpe.0200@gmail.com")
+                .withSsh("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCnFXbFMyHATHJKisQFtD2a9W9fgbb+ucdwle84ma8GLa0LVvBOkHDvX81a9wzUBd5YSyq3JlIvZ80sXoj1HB10PHk1Bwzic60gGY8KoBruzlpGtM06Z94Opws/PZa6aVm5gGdoiQ2n73BNQ2kxcAusyokdKV26yrlFn57nc+LgWclCDwxdUrVdETLufsICr3YHfexkL6Omaie5m/xebFvW180giTQclyI1RQQJd07fHAaJvDK4XXEipcZyUeKOREZn0B5sXf56ehgZ8djhpUpOzea5Zv+MoM4joRjwsyd+hpvOgCnjs1OiYUzYhL136NmhWqPxvEvTJEkJPFzgwNbPBZBD68T6l9pju+RBLam0fseOXaAriMf0Ko1F1bAJ1wx2sBqGrxU6yUm/QWcHRl9FvbUK4K09inwmmLEDQ07zE86yRGtHOd0jtxnZJGCL3VcJGm2JOArseFarkILgJ9g+NpWNfU9y4rDkNPd5WA/4bXLdmtsl8kyDiX2MNQnTmas2xre7hNzmrDYg+dES3j3tI00BToNcNVb6FwcPr0d24hyoQxgDkDWqw7jxE5oP7qi0c5zcJwR5IVt3hekgUkwEvOERbS7zEoTT3bxpZ26kDLSj0HIqRjDdTDcUT0B11yHOByqzHpb0zvCVbIGrP9PwJP8xx5fIA1OHY3GruKfe7w== anfelpe.0200@gmail.com")
                 .withSize(VirtualMachineSizeTypes.STANDARD_D2S_V3)
                 .create();
     }

@@ -42,11 +42,6 @@ public class ProjectsController {
         return ResponseUtils.validateResponse(projectService.createDatabase(createDatabaseDto));
     }
 
-    @GetMapping("/validate-instances")
-    public ResponseEntity<?> testInstance() {
-        return ResponseEntity.ok().body(projectService.validateInstanceStatus());
-    }
-
     @DeleteMapping("/{name}")
     public ResponseEntity<?> deleteProject(@PathVariable String name) {
         return ResponseEntity.ok().body(projectService.deleteProject(name));

@@ -12,4 +12,6 @@ public interface DatabaseRepository extends JpaRepository<DatabaseEntity, UUID> 
     Boolean existsByName(String username);
 
     List<DatabaseEntity> findAll();
+
+    DatabaseEntity findByName(String databaseName);
 }
