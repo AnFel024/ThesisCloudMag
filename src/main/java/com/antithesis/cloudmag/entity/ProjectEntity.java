@@ -16,7 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(	name = "projects")
+@Table(	name = "projects",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "id"),
+                @UniqueConstraint(columnNames = "name")
+        })
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProjectEntity {
@@ -27,12 +31,19 @@ public class ProjectEntity {
     @NotBlank
     private String name;
 
-    @NotBlank
     private String repositoryUrl;
 
     private Long createdAt;
 
-    private String status;
+    private String language;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(	name = "project_status",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId"))
+    private StatusEntity status;
+
+    private String projectType;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "project_instances",

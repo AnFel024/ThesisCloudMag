@@ -27,7 +27,6 @@ import java.util.Set;
 public class UserEntity {
     @Id
     @NotBlank
-    @Size(max = 20)
     private String id;
 
     @NotBlank

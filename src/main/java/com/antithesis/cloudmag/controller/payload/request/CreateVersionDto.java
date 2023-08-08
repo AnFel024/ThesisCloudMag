@@ -13,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class CreateVersionDto extends JenkinsDto {
 	private String username;
-	private String projectName;
 	private String name;
 	private String tag;
 }

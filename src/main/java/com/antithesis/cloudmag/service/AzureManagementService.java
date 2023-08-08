@@ -1,54 +1,85 @@
 package com.antithesis.cloudmag.service;
 
-import com.azure.core.credential.TokenCredential;
-import com.azure.core.http.policy.HttpLogDetailLevel;
-import com.azure.core.management.AzureEnvironment;
-import com.azure.core.management.profile.AzureProfile;
-import com.azure.identity.AzureAuthorityHosts;
-import com.azure.identity.EnvironmentCredentialBuilder;
 import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.compute.models.KnownLinuxVirtualMachineImage;
-import com.azure.resourcemanager.compute.models.PublicIpAddressSku;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
 import com.azure.resourcemanager.compute.models.VirtualMachineSizeTypes;
+import com.azure.resourcemanager.network.models.NetworkSecurityGroup;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Named;
+import java.util.concurrent.CompletableFuture;
+
 @Service
-//@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@Slf4j
 public class AzureManagementService {
 
     private static final String REGION = "eastus";
 
     private static final String GROUP_NAME = "tesis-resource-groups";
 
-    public AzureManagementService() {
+    private final String sshPublicKey;
+    private final AzureResourceManager azureResourceManager;
+
+    public AzureManagementService(@Qualifier("azure-vms-configuration") AzureResourceManager azureResourceManager,
+                                  @Value("${ssh.public.key}") String sshPublicKey) {
+        this.azureResourceManager = azureResourceManager;
+        this.sshPublicKey = sshPublicKey;
     }
 
     public VirtualMachine createVirtualMachine(String name) {
-        // TODO
-        TokenCredential credential = new EnvironmentCredentialBuilder()
-                .authorityHost(AzureAuthorityHosts.AZURE_PUBLIC_CLOUD)
-                .build();
-
-        // Please finish 'Set up authentication' step first to set the four environment variables: AZURE_SUBSCRIPTION_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID
-        AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
-
-        AzureResourceManager azureResourceManager = AzureResourceManager.configure()
-                .withLogLevel(HttpLogDetailLevel.BASIC)
-                .authenticate(credential, profile)
-                .withDefaultSubscription();
-
-        return azureResourceManager.virtualMachines()
+        VirtualMachine virtualMachine = azureResourceManager.virtualMachines()
                 .define(name)
                 .withRegion(REGION)
-                .withNewResourceGroup("tesis-1-ip")
+                .withExistingResourceGroup(GROUP_NAME)
                 .withNewPrimaryNetwork("10.0.0.0/24")
                 .withPrimaryPrivateIPAddressDynamic()
                 .withNewPrimaryPublicIPAddress(name + "-ip")
                 .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_20_04_LTS)
-                .withRootUsername("testUser")
-                .withSsh("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC7x6dZvODwhSV+SplyrDFpKMU98dSlfWEkRJUdZ6HbbHAARS2uvWBQ/dqO83AcvvvZABj8xeyxAjMWVebXb6daCPYya051PvufWA/O8FDIvo1NsAlcB0r4IldbsofrETnAfBJXGxqnS5LV8x1N3PWfAVus4OFaO0RPTwH27BFSHDtuWJvww8/GjzckJdb8xWJq7jNoReJXnyWDYUC+hjvMEiGQEb5nwcsDK4FwFfaXTuuHvMpldmNji6QAQg6BdGcAKsvWpAP/NPrae0gEio11DqMo6ONbUS2mAwu05rDsbLLKgXMaUiZHIlPq0s+TKAJ8sUiNtSB9niDp897j54YZF0lca9/eoJnqeDQHoFjdsYj6woPc1OcB6kVa1B9RVxmUEmQVoiwRQ2Heesqkrbote2LHZBDWnpdD07/GSr1/EM4kIdPDiclMRv7kgnF05Q02AJ8SypT0Cot2XH2FAMEfzH0zQlMRpbwgLlvbEVK3QfBbLgANiPRYu8Blw2xYqyL+7iT9asQ0XTwr315jx+x2xNzJ3Ek8mlxPQ17+Et3EIkNycxEyO1iGQGJv9ospzVX3l2wT7Ymc8Augucq3V2EBjAljAIFlVAB5ztjmOlxXONnay1YBeqkOF237LhM/pQHq09bZhEedMZJVQl9i5BcXfjd8DTPY4ET54j5v43dMJQ== -anfelpe.0200@gmail.com")
+                .withRootUsername("ubuntu")
+                .withSsh("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVBBWMIO59CwUpdPmEBjueoiS/vp8qe4oOW+Qnf6Eees2p5K5XxvOFMmTVN7QcjGR0K6bK0H6oj2NL6l1JJTNWYDNRM6kPIY6qCyw/Gbs6HJyb7/ypPfJUF1X/pUkjrK+McuxhKFNVr4JbJLdx91ZmmZJ5+P2aVL+qrANrFKY1ZE1Kl2k744J7Xa+B8kv/EUENpmRnr5sj47U4uExuRMGzdRasbBz6M/AfdDokE427VXBybh00JIzYZtOl9/hD42JySg2mXM3GNssirrNJvSAfmvWm/IMFCDw8XrSJkv3YretL5U+riT/OfXddRz0wLQAbT13QsjZnWc7KEVHz8nRVxZ3nz/dFGn3FQ4morKsDkqxA5UlD9Fa09myqItCDy+8ElhJ3REhYCOGmGjOK/nVVLsgIgRQW3wcauB/QsjHHK7H1TvzGFOL6XqCnqzly0g/mTWDAh0kwdyT3YJ22sejS/0Df/eLH/aKJccmsamwmVsrg9VMqYduLQ64egA+BVgYkvld8ixmPIop9NlyPDC/5haM6KEUC7TPweIrXCXgKP2c8raQsXhblROjWg9WG72AESATfRUlmrzqLO8Tqunggnoussx1/MeaOdJCTulIUdX/Bdj1xjaP7aFSCBK19GmZEHRjDRYE/DQ8ZzAqCJ5UrFYmpfpUd0lI8ADOmBJ22ow== anfelpe.0200@gmail.com")
                 .withSize(VirtualMachineSizeTypes.STANDARD_D2S_V3)
                 .create();
+        NetworkSecurityGroup grupo1 = azureResourceManager.networkSecurityGroups().getByResourceGroup(GROUP_NAME, "Grupo1");
+        virtualMachine.getPrimaryNetworkInterface().update()
+                .withExistingNetworkSecurityGroup(grupo1)
+                .apply();
+        return virtualMachine;
     }
+
+    public boolean deleteVirtualMachine(String id) {
+        try {
+            VirtualMachine virtualMachine = azureResourceManager.virtualMachines().getByResourceGroup(GROUP_NAME, id);
+            virtualMachine.deallocate();
+            CompletableFuture<Void> voidCompletableFuture = deletePublicIpAddress(virtualMachine);
+            CompletableFuture<Void> future = azureResourceManager.virtualMachines().deleteByIdAsync(virtualMachine.id(), true).toFuture();
+            voidCompletableFuture.thenCombine(future, (unused, unused2) -> {
+                log.info("Virtual machine deleted");
+                return true;
+            }).join();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return true;
+        }
+        return true;
+    }
+
+    public CompletableFuture<Void> deletePublicIpAddress(VirtualMachine virtualMachine) {
+        String networkId = virtualMachine.getPrimaryNetworkInterface().id();
+        String ipId = virtualMachine.getPrimaryPublicIPAddressId();
+        return azureResourceManager.networkInterfaces()
+                .getById(networkId)
+                .update()
+                .withoutPrimaryPublicIPAddress()
+                .applyAsync().toFuture()
+                .exceptionallyCompose(throwable -> {
+                    log.error(throwable.getMessage());
+                    throw new RuntimeException(throwable.getMessage());
+                })
+                .thenAccept(unused -> azureResourceManager.publicIpAddresses().deleteById(ipId));
+    }
+
 }

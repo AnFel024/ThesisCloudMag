@@ -4,9 +4,11 @@ import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
 import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
+import com.antithesis.cloudmag.entity.ProjectEntity;
 import com.antithesis.cloudmag.entity.VersionEntity;
 import com.antithesis.cloudmag.mapper.VersionMapper;
 import com.antithesis.cloudmag.model.Version;
+import com.antithesis.cloudmag.repository.ProjectRepository;
 import com.antithesis.cloudmag.repository.UserRepository;
 import com.antithesis.cloudmag.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -25,6 +28,7 @@ import static java.lang.String.format;
 public class VersionService {
 
     private final VersionRepository versionRepository;
+    private final ProjectRepository projectRepository;
     private final JenkinsClient jenkinsClient;
     private final UserRepository userRepository;
     private final VersionMapper versionMapper;
@@ -32,20 +36,27 @@ public class VersionService {
 
 
     public MessageResponse<?> createVersion(CreateVersionDto createVersionDto) {
-        Boolean versionTriggered = jenkinsClient.triggerJob(
-                createVersionDto.getAppOrg(),
+        String[] split = createVersionDto.getBranchName().split("/");
+        String branchName = split.length == 1 ? split[0] : split[0] + "/" + split[1];
+
+        UUID uuid = UUID.randomUUID();
+        Boolean versionTriggered = jenkinsClient.triggerVersionJob(
                 createVersionDto.getAppUrl(),
                 createVersionDto.getAppName(),
-                createVersionDto.getBranchName(),
+                branchName,
                 createVersionDto.getTag(),
-                createVersionDto.getBranchType()
+                uuid.toString()
         );
+        ProjectEntity byName = projectRepository.findByName(createVersionDto.getAppName()).orElseThrow(() -> new RuntimeException("Project not found"));;
         VersionEntity versionEntity = VersionEntity.builder()
-                .name(createVersionDto.getName())
+                .name(createVersionDto.getTag())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
                 .tagName(createVersionDto.getTag())
+                .branchName(branchName)
                 .creator(userRepository.findById(createVersionDto.getUsername()).get())
                 .status(versionTriggered ? "PENDING" : "FAILED")
+                .projectInfo(byName)
+                .id(uuid)
                 .build();
         versionRepository.save(versionEntity);
         return MessageResponse.builder()
@@ -60,7 +71,13 @@ public class VersionService {
         return MessageResponse.<List<Version>>builder()
                 .status(HttpStatus.OK)
                 .data(versionRepository.findAll().stream()
-                        .map(versionMapper::mapToVersion)
+                        .map(versionEntity -> {
+                            Version version = versionMapper.mapToVersion(versionEntity);
+                            version.setDate(LocalDateTime.ofInstant(
+                                    java.time.Instant.ofEpochMilli(versionEntity.getCreatedAt()),
+                                    java.time.ZoneId.systemDefault()).toString());
+                            return version;
+                        })
                         .toList())
                 .build();
     }

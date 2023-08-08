@@ -19,6 +19,8 @@ public class Deploy {
     private Long createdAt;
     private Instance instanceInfo;
     private Version versionInfo;
+    private String date;
     private User creator;
+    private String status;
 }
 

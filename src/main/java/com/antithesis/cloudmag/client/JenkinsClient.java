@@ -1,6 +1,5 @@
 package com.antithesis.cloudmag.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -24,29 +23,49 @@ public class JenkinsClient {
     }
 
     @SneakyThrows
-    public Boolean triggerJob(String appOrg,
-                              String appUrl,
-                              String appName,
-                              String branchName,
-                              String versionTag,
-                              String branchType) {
-        String params = String.join("&", java.util.List.of("token=my_token","app_org=" + appOrg,
+    public Boolean triggerVersionJob(String appUrl,
+                                     String appName,
+                                     String branchName,
+                                     String versionTag,
+                                     String versionId) {
+        String params = String.join("&", java.util.List.of("token=my_token",
+                "$version_id=" + versionId,
                 "app_name="+ appName,
                 "app_url=" + appUrl,
                 "branch_name=" + branchName,
-                "branch_type=" + branchType,
                 "version_tag=" + versionTag));
         return triggerInJenkins(params, "createversion");
     }
 
     @SneakyThrows
-    public Boolean triggerDeployJob(String dockerImageName, String dockerImageTag, String ipDir, String dockerContainerName) {
+    public Boolean triggerDatabaseJob(String ipDir, String dbPass, String jobName, String dbName) {
         String params = String.join("&", java.util.List.of("token=my_token",
-                "docker_container_name=" + dockerContainerName,
+                "db_name="+ dbName,
+                "db_pass="+ dbPass,
+                "ip_dir="+ ipDir));
+        return triggerInJenkins(params, jobName);
+    }
+
+    @SneakyThrows
+    public Boolean triggerDeployJob(String versionId, String dockerImageName, String dockerImageTag, String ipDir, String keyType) {
+        String params = String.join("&", java.util.List.of("token=my_token",
+                "key_type=" + keyType,
+                "version_id=" + versionId,
+                "app_name=" + dockerImageName,
+                "docker_container_name=" + dockerImageName,
                 "docker_image_name=" + dockerImageName,
                 "docker_image_tag=" + dockerImageTag,
                 "ip_dir=" + ipDir));
         return triggerInJenkins(params, "deploy");
+    }
+
+    @SneakyThrows
+    public Boolean triggerScaffoldingJob(String ipDir, String appName, String keyType) {
+        String params = String.join("&", java.util.List.of("token=my_token",
+                "key_type=" + keyType,
+                "app_name=" + appName,
+                "ip_dir=" + ipDir));
+        return triggerInJenkins(params, "approvisionate");
     }
 
     private Boolean triggerInJenkins(String params, String jobName) throws URISyntaxException, java.io.IOException, InterruptedException {

@@ -17,8 +17,8 @@ public class UsersController {
     private final UserService userService;
     private final UserDetailsServiceImpl userDetailsService;
 
-    @GetMapping("/user/{user_id}")
-    public ResponseEntity<?> getUsers(@PathVariable String user_id) {
+    @GetMapping("/list-all")
+    public ResponseEntity<?> getUsers() {
         return ResponseUtils.validateResponse(userService.getAllUsers());
     }
 

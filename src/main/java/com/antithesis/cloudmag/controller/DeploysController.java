@@ -25,7 +25,7 @@ public class DeploysController {
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/list/")
+    @GetMapping("/list")
     public ResponseEntity<?> getDeploys() {
         return ResponseEntity.ok().body(deploysService.listDeploys());
     }

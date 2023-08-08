@@ -22,7 +22,10 @@ public class Database {
     private String name;
     private String dbms;
     private Long createdAt;
-    private Instance instanceInfo;
+    private String initialPassword;
+    private String date;
+    private String status;
+    private Project projectInfo;
     private User creator;
 }
 
