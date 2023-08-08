@@ -29,5 +29,6 @@ public class Project {
     private User creator;
     private String date;
     private String projectType;
+    private String language;
 }
 

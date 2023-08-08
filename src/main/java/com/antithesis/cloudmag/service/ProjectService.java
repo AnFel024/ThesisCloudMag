@@ -85,6 +85,7 @@ public class ProjectService {
             GitHubCreateRepositoryResponse gitHubClientRepository = gitHubClient.createRepository(
                     Strings.concat("tesisV1", createAppDto.getName()), createAppDto.getLanguage());
             project.repositoryUrl(gitHubClientRepository.getHtmlUrl());
+            project.language(createAppDto.getLanguage());
         }
         return projectRepository.save(project.build());
     }

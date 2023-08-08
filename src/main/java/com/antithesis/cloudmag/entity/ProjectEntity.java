@@ -35,6 +35,8 @@ public class ProjectEntity {
 
     private Long createdAt;
 
+    private String language;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "project_status",
             joinColumns = @JoinColumn(name = "id"),
