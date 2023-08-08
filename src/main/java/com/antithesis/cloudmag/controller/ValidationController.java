@@ -1,13 +1,10 @@
 package com.antithesis.cloudmag.controller;
 
-import com.antithesis.cloudmag.client.GitHubClient;
-import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
+import com.antithesis.cloudmag.service.AzureManagementService;
 import com.antithesis.cloudmag.service.ProjectService;
 import com.antithesis.cloudmag.service.ValidationsService;
-import com.antithesis.cloudmag.service.VersionService;
 import com.antithesis.cloudmag.utils.ResponseUtils;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +17,7 @@ import javax.inject.Inject;
 public class ValidationController {
 
     private final ValidationsService validationsService;
+    private final AzureManagementService azureManagementService;
     private final ProjectService projectService;
 
     @GetMapping("/project_created/{projectName}")
@@ -34,15 +32,15 @@ public class ValidationController {
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/version_created/{versionName}")
-    public ResponseEntity<?> refreshVersion(@PathVariable String versionName) {
-        MessageResponse<?> messageResponse = validationsService.validateVersion(versionName);
+    @GetMapping("/version_created/{versionId}")
+    public ResponseEntity<?> refreshVersion(@PathVariable String versionId) {
+        MessageResponse<?> messageResponse = validationsService.validateVersion(versionId);
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/deploy_created/{deployName}/tag/{tagName}")
-    public ResponseEntity<?> refreshDeploy(@PathVariable String deployName, @PathVariable String tagName) {
-        MessageResponse<?> messageResponse = validationsService.validateDeploy(deployName, tagName);
+    @GetMapping("/deploy_created/{deployName}/tag/{versionId}")
+    public ResponseEntity<?> refreshDeploy(@PathVariable String deployName, @PathVariable String versionId) {
+        MessageResponse<?> messageResponse = validationsService.validateDeploy(deployName, versionId);
         return ResponseUtils.validateResponse(messageResponse);
     }
 

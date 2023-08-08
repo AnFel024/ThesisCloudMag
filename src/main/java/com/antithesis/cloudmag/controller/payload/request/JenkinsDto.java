@@ -18,5 +18,4 @@ public class JenkinsDto {
     private String appUrl;
     private String appName;
     private String branchName;
-    private String branchType;
 }

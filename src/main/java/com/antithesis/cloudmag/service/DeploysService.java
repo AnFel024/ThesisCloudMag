@@ -3,7 +3,6 @@ package com.antithesis.cloudmag.service;
 import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
 import com.antithesis.cloudmag.controller.payload.request.CreateDeployDto;
-import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
 import com.antithesis.cloudmag.entity.*;
 import com.antithesis.cloudmag.mapper.DeployMapper;
@@ -15,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -37,15 +38,18 @@ public class DeploysService {
                 .orElseThrow(() ->
                         new RuntimeException(
                                 format("User with id %s not found", createDeployDto.getUsername())));
-        VersionEntity versionEntity = versionRepository.findByTagName(createDeployDto.getTag());
+        VersionEntity versionEntity = versionRepository.findById(UUID.fromString(createDeployDto.getTagId())).orElseThrow();
         Boolean success = jenkinsClient.triggerDeployJob(
+                versionEntity.getId().toString(),
                 createDeployDto.getAppName(),
-                createDeployDto.getTag(),
-                createDeployDto.getIpDir());
+                versionEntity.getTagName(),
+                createDeployDto.getIpDir(),
+                "AWS".equals(versionEntity.getProjectInfo().getInstanceInfo().getProvider()) ? "key.pem" : "id_rsa");
         DeployEntity deployEntity = DeployEntity.builder()
                 .creator(userEntity)
                 .instanceInfo(versionEntity.getProjectInfo().getInstanceInfo())
                 .versionInfo(versionEntity)
+                .createdAt(LocalDateTime.now().toInstant(java.time.ZoneOffset.UTC).toEpochMilli())
                 .status(success ? "SUCCESS" : "FAILED")
                 .build();
         deployRepository.save(deployEntity);
@@ -57,6 +61,14 @@ public class DeploysService {
 
     public MessageResponse<List<Deploy>> listDeploys() {
         return MessageResponse.<List<Deploy>>builder().status(HttpStatus.OK).data(
-                deployRepository.findAll().stream().map(deployMapper::mapToDeploy).toList()).build();
+                deployRepository.findAll().stream()
+                        .map(deployEntity -> {
+                            Deploy deploy = deployMapper.mapToDeploy(deployEntity);
+                            deploy.setDate(LocalDateTime.ofInstant(
+                                    java.time.Instant.ofEpochMilli(deployEntity.getCreatedAt()),
+                                    java.time.ZoneId.systemDefault()).toString());
+                            return deploy;
+                        })
+                        .toList()).build();
     }
 }

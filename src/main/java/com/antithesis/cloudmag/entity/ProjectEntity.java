@@ -31,12 +31,17 @@ public class ProjectEntity {
     @NotBlank
     private String name;
 
-    @NotBlank
     private String repositoryUrl;
 
     private Long createdAt;
 
-    private String status;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(	name = "project_status",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "userId"))
+    private StatusEntity status;
+
+    private String projectType;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinTable(	name = "project_instances",

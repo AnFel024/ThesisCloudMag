@@ -13,4 +13,5 @@ public class CreateDeployDto extends JenkinsDto {
 	private String username;
 	private String ipDir;
 	private String tag;
+	private String tagId;
 }

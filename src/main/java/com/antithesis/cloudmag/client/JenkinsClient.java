@@ -1,6 +1,5 @@
 package com.antithesis.cloudmag.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -24,11 +23,13 @@ public class JenkinsClient {
     }
 
     @SneakyThrows
-    public Boolean triggerJob(String appUrl,
-                              String appName,
-                              String branchName,
-                              String versionTag) {
+    public Boolean triggerVersionJob(String appUrl,
+                                     String appName,
+                                     String branchName,
+                                     String versionTag,
+                                     String versionId) {
         String params = String.join("&", java.util.List.of("token=my_token",
+                "$version_id=" + versionId,
                 "app_name="+ appName,
                 "app_url=" + appUrl,
                 "branch_name=" + branchName,
@@ -46,8 +47,10 @@ public class JenkinsClient {
     }
 
     @SneakyThrows
-    public Boolean triggerDeployJob(String dockerImageName, String dockerImageTag, String ipDir) {
+    public Boolean triggerDeployJob(String versionId, String dockerImageName, String dockerImageTag, String ipDir, String keyType) {
         String params = String.join("&", java.util.List.of("token=my_token",
+                "key_type=" + keyType,
+                "version_id=" + versionId,
                 "app_name=" + dockerImageName,
                 "docker_container_name=" + dockerImageName,
                 "docker_image_name=" + dockerImageName,
@@ -57,8 +60,9 @@ public class JenkinsClient {
     }
 
     @SneakyThrows
-    public Boolean triggerScaffoldingJob(String ipDir, String appName) {
+    public Boolean triggerScaffoldingJob(String ipDir, String appName, String keyType) {
         String params = String.join("&", java.util.List.of("token=my_token",
+                "key_type=" + keyType,
                 "app_name=" + appName,
                 "ip_dir=" + ipDir));
         return triggerInJenkins(params, "approvisionate");

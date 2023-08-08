@@ -1,12 +1,8 @@
 package com.antithesis.cloudmag.controller;
 
-import com.antithesis.cloudmag.controller.payload.request.CreateAppDto;
-import com.antithesis.cloudmag.controller.payload.request.CreateDatabaseDto;
-import com.antithesis.cloudmag.controller.payload.request.CreateTaskDto;
-import com.antithesis.cloudmag.controller.payload.request.ListInfoDto;
+import com.antithesis.cloudmag.controller.payload.request.*;
 import com.antithesis.cloudmag.service.ProjectService;
 import com.antithesis.cloudmag.utils.ResponseUtils;
-import com.azure.core.annotation.Get;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +38,8 @@ public class ProjectsController {
         return ResponseUtils.validateResponse(projectService.createDatabase(createDatabaseDto));
     }
 
-    @DeleteMapping("/{name}")
-    public ResponseEntity<?> deleteProject(@PathVariable String name) {
-        return ResponseEntity.ok().body(projectService.deleteProject(name));
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteProject(@Valid @RequestBody DeleteAppDto deleteAppDto) {
+        return ResponseEntity.ok().body(projectService.deleteProject(deleteAppDto));
     }
 }

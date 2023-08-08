@@ -23,9 +23,11 @@ public class Version {
     private Long createdAt;
     private String name;
     private String description;
+    private String branchName;
     private String tagName;
     private String status;
     private User creator;
     private Project projectInfo;
+    private String date;
 }
 

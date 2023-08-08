@@ -20,9 +20,11 @@ import static java.lang.String.format;
 @Component
 public class GitHubClient {
     private static final String BASE_URL = "https://api.github.com";
-    private static final String CREATE_REPO_TARGET_URL = "%s/repos/cloudmag-tesis/spring-template/generate";
+    private static final String CREATE_REPO_TARGET_URL = "%s/repos/cloudmag-tesis/%s/generate";
     private static final String DELETE_REPO_TARGET_URL = "%s/repos/cloudmag-tesis/%s";
     private static final String LIST_BRANCH_TARGET_URL = "%s/repos/%s/%s/branches";
+    private static final String JAVA_TEMPLATE_ID = "spring-template";
+    private static final String PYTHON_TEMPLATE_ID = "django-template";
 
     private final String GAT;
     private final ObjectMapper objectMapper;
@@ -33,8 +35,11 @@ public class GitHubClient {
     }
 
     @SneakyThrows
-    public GitHubCreateRepositoryResponse createRepository(String repositoryName) {
-        URI targetURI = new URI(format(CREATE_REPO_TARGET_URL, BASE_URL));
+    public GitHubCreateRepositoryResponse createRepository(String repositoryName, String language) {
+        URI targetURI = new URI(format(
+                CREATE_REPO_TARGET_URL,
+                BASE_URL,
+                "java".equals(language) ? JAVA_TEMPLATE_ID : PYTHON_TEMPLATE_ID));
         Map<String, Object > body = Map.of(
                 "name",repositoryName,
                 "owner","cloudmag-tesis",

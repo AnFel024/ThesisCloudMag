@@ -24,8 +24,10 @@ public class Project {
     private String name;
     private String repositoryUrl;
     private Long createdAt;
-    private String status;
+    private Status status;
     private Instance instanceInfo;
     private User creator;
+    private String date;
+    private String projectType;
 }
 

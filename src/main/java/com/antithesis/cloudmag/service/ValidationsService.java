@@ -4,10 +4,7 @@ import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
 import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
-import com.antithesis.cloudmag.entity.DatabaseEntity;
-import com.antithesis.cloudmag.entity.DeployEntity;
-import com.antithesis.cloudmag.entity.ProjectEntity;
-import com.antithesis.cloudmag.entity.VersionEntity;
+import com.antithesis.cloudmag.entity.*;
 import com.antithesis.cloudmag.mapper.VersionMapper;
 import com.antithesis.cloudmag.model.Version;
 import com.antithesis.cloudmag.repository.*;
@@ -19,6 +16,7 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -28,11 +26,12 @@ public class ValidationsService {
 
     private final VersionRepository versionRepository;
     private final ProjectRepository projectRepository;
+    private final StatusRepository statusRepository;
     private final DatabaseRepository databaseRepository;
     private final DeployRepository deployRepository;
 
-    public MessageResponse<String> validateVersion(String versionName) {
-        VersionEntity versionEntity = versionRepository.findByTagName(versionName);
+    public MessageResponse<String> validateVersion(String versionId) {
+        VersionEntity versionEntity = versionRepository.findById(UUID.fromString(versionId)).orElseThrow();
         versionEntity.setStatus("CREATED");
         versionRepository.save(versionEntity);
         return MessageResponse.<String>builder()
@@ -52,8 +51,12 @@ public class ValidationsService {
     }
 
     public MessageResponse<String> validateProject(String projectName) {
-        ProjectEntity projectEntity = projectRepository.findByName(projectName).orElseThrow();
-        projectEntity.setStatus("CREATED");
+        ProjectEntity projectEntity = projectRepository.findByName(projectName).orElseThrow(() -> new RuntimeException("Project not found"));
+        StatusEntity status = projectEntity.getStatus();
+        status.setStatusName("CREATED");
+        status.setUpdatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+        statusRepository.save(status);
+        projectEntity.setStatus(status);
         projectRepository.save(projectEntity);
         return MessageResponse.<String>builder()
                 .message("Proyecto creado")
@@ -61,13 +64,13 @@ public class ValidationsService {
                 .build();
     }
 
-    public MessageResponse<String> validateDeploy(String projectName, String tagName) {
+    public MessageResponse<String> validateDeploy(String projectName, String versionId) {
         List<DeployEntity> deployEntities = deployRepository.findAllByProjectInfoName(projectName);
         deployEntities.stream()
                 .peek(deployEntity -> deployEntity.setStatus("FINISHED"))
                 .forEach(deployRepository::save);
         DeployEntity actual = deployEntities.stream()
-                .filter(deployEntity -> deployEntity.getVersionInfo().getTagName().equals(tagName))
+                .filter(deployEntity -> deployEntity.getVersionInfo().getId().equals(UUID.fromString(versionId)))
                 .findFirst()
                 .orElseThrow();
         actual.setStatus("ACTIVE");

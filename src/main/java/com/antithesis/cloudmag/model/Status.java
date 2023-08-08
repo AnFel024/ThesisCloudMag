@@ -14,13 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Deploy {
+public class Status {
     private UUID id;
-    private Long createdAt;
-    private Instance instanceInfo;
-    private Version versionInfo;
-    private String date;
-    private User creator;
-    private String status;
+    private String statusName;
+    private Long updatedAt;
+    private User updatedBy;
 }
-

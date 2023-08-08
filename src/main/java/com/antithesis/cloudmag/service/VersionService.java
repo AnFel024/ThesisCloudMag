@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -36,26 +36,27 @@ public class VersionService {
 
 
     public MessageResponse<?> createVersion(CreateVersionDto createVersionDto) {
-        String branchName = createVersionDto.getBranchName();
-        if (!"master".equals(createVersionDto.getBranchName())
-                && !"develop".equals(createVersionDto.getBranchType())
-                && !"main".equals(createVersionDto.getBranchType())) {
-            branchName = createVersionDto.getBranchType() + "/" + createVersionDto.getBranchName();
-        }
-        Boolean versionTriggered = jenkinsClient.triggerJob(
+        String[] split = createVersionDto.getBranchName().split("/");
+        String branchName = split.length == 1 ? split[0] : split[0] + "/" + split[1];
+
+        UUID uuid = UUID.randomUUID();
+        Boolean versionTriggered = jenkinsClient.triggerVersionJob(
                 createVersionDto.getAppUrl(),
                 createVersionDto.getAppName(),
                 branchName,
-                createVersionDto.getTag()
+                createVersionDto.getTag(),
+                uuid.toString()
         );
-        ProjectEntity byName = projectRepository.findByName(createVersionDto.getAppName()).orElseThrow();
+        ProjectEntity byName = projectRepository.findByName(createVersionDto.getAppName()).orElseThrow(() -> new RuntimeException("Project not found"));;
         VersionEntity versionEntity = VersionEntity.builder()
                 .name(createVersionDto.getTag())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
                 .tagName(createVersionDto.getTag())
+                .branchName(branchName)
                 .creator(userRepository.findById(createVersionDto.getUsername()).get())
                 .status(versionTriggered ? "PENDING" : "FAILED")
                 .projectInfo(byName)
+                .id(uuid)
                 .build();
         versionRepository.save(versionEntity);
         return MessageResponse.builder()
@@ -70,7 +71,13 @@ public class VersionService {
         return MessageResponse.<List<Version>>builder()
                 .status(HttpStatus.OK)
                 .data(versionRepository.findAll().stream()
-                        .map(versionMapper::mapToVersion)
+                        .map(versionEntity -> {
+                            Version version = versionMapper.mapToVersion(versionEntity);
+                            version.setDate(LocalDateTime.ofInstant(
+                                    java.time.Instant.ofEpochMilli(versionEntity.getCreatedAt()),
+                                    java.time.ZoneId.systemDefault()).toString());
+                            return version;
+                        })
                         .toList())
                 .build();
     }

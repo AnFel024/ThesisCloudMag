@@ -21,7 +21,6 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class VersionEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private Long createdAt;
     @NotBlank
@@ -29,6 +28,7 @@ public class VersionEntity {
     private String description;
     @NotBlank
     private String tagName;
+    private String branchName;
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
