@@ -29,7 +29,7 @@ public class JenkinsClient {
                                      String versionTag,
                                      String versionId) {
         String params = String.join("&", java.util.List.of("token=my_token",
-                "$version_id=" + versionId,
+                "version_id=" + versionId,
                 "app_name="+ appName,
                 "app_url=" + appUrl,
                 "branch_name=" + branchName,
