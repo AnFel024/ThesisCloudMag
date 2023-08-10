@@ -40,14 +40,16 @@ public class VersionService {
         String branchName = split.length == 1 ? split[0] : split[0] + "/" + split[1];
 
         UUID uuid = UUID.randomUUID();
+        ProjectEntity byName = projectRepository.findByName(createVersionDto.getAppName())
+                .orElseThrow(() -> new RuntimeException("Project not found"));;
         Boolean versionTriggered = jenkinsClient.triggerVersionJob(
                 createVersionDto.getAppUrl(),
                 createVersionDto.getAppName(),
                 branchName,
                 createVersionDto.getTag(),
-                uuid.toString()
+                uuid.toString(),
+                byName.getLanguage()
         );
-        ProjectEntity byName = projectRepository.findByName(createVersionDto.getAppName()).orElseThrow(() -> new RuntimeException("Project not found"));;
         VersionEntity versionEntity = VersionEntity.builder()
                 .name(createVersionDto.getTag())
                 .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())

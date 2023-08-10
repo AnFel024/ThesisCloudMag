@@ -101,6 +101,9 @@ dependencies {
     // Validations
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '8.0.0.Final'
 
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/costexplorer
+    implementation 'software.amazon.awssdk:costexplorer:2.20.121'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

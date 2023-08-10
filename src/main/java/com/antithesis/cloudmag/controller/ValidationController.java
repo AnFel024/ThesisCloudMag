@@ -32,9 +32,9 @@ public class ValidationController {
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/version_created/{versionId}")
-    public ResponseEntity<?> refreshVersion(@PathVariable String versionId) {
-        MessageResponse<?> messageResponse = validationsService.validateVersion(versionId);
+    @GetMapping("/version/{versionId}/status/{status}")
+    public ResponseEntity<?> refreshVersion(@PathVariable String versionId, @PathVariable String status) {
+        MessageResponse<?> messageResponse = validationsService.validateVersion(versionId, status);
         return ResponseUtils.validateResponse(messageResponse);
     }
 

@@ -3,18 +3,33 @@ package com.antithesis.cloudmag.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+import software.amazon.awssdk.services.costexplorer.model.*;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
 
 import java.util.List;
 
+import static software.amazon.awssdk.regions.Region.US_EAST_1;
+
 @Service
 @Slf4j
 public class AWSManagementService {
     private final Ec2Client ec2Client;
+    private final CostExplorerClient costExplorerClient;
 
-    public AWSManagementService(@Qualifier("ec2-instances-configuration") Ec2Client ec2Client) {
-        this.ec2Client = ec2Client;
+    public AWSManagementService(@Qualifier("ec2-instances-configuration") AwsBasicCredentials awsBasicCredentials) {
+        this.ec2Client = Ec2Client.builder()
+                .region(US_EAST_1)
+                .credentialsProvider(StaticCredentialsProvider.create(awsBasicCredentials))
+                .build();
+        this.costExplorerClient = CostExplorerClient.builder()
+                .region(Region.US_EAST_1)
+                .credentialsProvider(StaticCredentialsProvider.create(awsBasicCredentials))
+                .build();
     }
 
     public RunInstancesResponse generateInstance(InstanceType instanceType) {
@@ -64,5 +79,20 @@ public class AWSManagementService {
 
     public DescribeInstancesResponse validateInstanceHealth() {
         return ec2Client.describeInstances();
+    }
+
+    public GetCostAndUsageResponse describeCosts() {
+        GetCostAndUsageRequest request = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder()
+                        .start("2023-08-01")
+                        .end("2023-08-09")
+                        .build())
+                .granularity(Granularity.DAILY)
+                .metrics("BlendedCost")
+                .build();
+
+        GetCostAndUsageResponse costAndUsage = costExplorerClient.getCostAndUsage(request);
+        return costAndUsage;
+
     }
 }

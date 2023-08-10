@@ -30,9 +30,9 @@ public class ValidationsService {
     private final DatabaseRepository databaseRepository;
     private final DeployRepository deployRepository;
 
-    public MessageResponse<String> validateVersion(String versionId) {
+    public MessageResponse<String> validateVersion(String versionId, String status) {
         VersionEntity versionEntity = versionRepository.findById(UUID.fromString(versionId)).orElseThrow();
-        versionEntity.setStatus("CREATED");
+        versionEntity.setStatus(status);
         versionRepository.save(versionEntity);
         return MessageResponse.<String>builder()
                 .message("Version creada")
