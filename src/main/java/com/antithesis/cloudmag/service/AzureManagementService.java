@@ -1,7 +1,6 @@
 package com.antithesis.cloudmag.service;
 
 import com.azure.resourcemanager.AzureResourceManager;
-import com.azure.resourcemanager.billing.BillingManager;
 import com.azure.resourcemanager.compute.models.KnownLinuxVirtualMachineImage;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
 import com.azure.resourcemanager.compute.models.VirtualMachineSizeTypes;
@@ -26,15 +25,12 @@ public class AzureManagementService {
 
     private final String sshPublicKey;
     private final AzureResourceManager azureResourceManager;
-    private final BillingManager billingManager;
     private final CostManagementManager costManagementManager;
 
     public AzureManagementService(@Qualifier("azure-vms-configuration") AzureResourceManager azureResourceManager,
-                                    @Qualifier("azure-billing-configuration") BillingManager billingManager,
                                     @Qualifier("azure-cost-configuration") CostManagementManager costManagementManager,
                                   @Value("${ssh.public.key}") String sshPublicKey) {
         this.azureResourceManager = azureResourceManager;
-        this.billingManager = billingManager;
         this.costManagementManager = costManagementManager;
         this.sshPublicKey = sshPublicKey;
     }

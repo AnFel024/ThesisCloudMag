@@ -7,7 +7,6 @@ import com.azure.core.management.profile.AzureProfile;
 import com.azure.identity.AzureAuthorityHosts;
 import com.azure.identity.EnvironmentCredentialBuilder;
 import com.azure.resourcemanager.AzureResourceManager;
-import com.azure.resourcemanager.billing.BillingManager;
 import com.azure.resourcemanager.costmanagement.CostManagementManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -46,20 +45,5 @@ public class AzureClientConfig {
         AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
 
         return CostManagementManager.authenticate(credential, profile);
-    }
-
-
-    @Bean
-    @Primary
-    @Qualifier("azure-billing-configuration")
-    public static BillingManager setAzureBillingConfiguration() {
-
-        TokenCredential credential = new EnvironmentCredentialBuilder()
-                .authorityHost(AzureAuthorityHosts.AZURE_PUBLIC_CLOUD)
-                .build();
-
-        AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
-
-        return BillingManager.authenticate(credential, profile);
     }
 }
