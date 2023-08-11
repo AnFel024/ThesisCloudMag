@@ -25,7 +25,7 @@ import javax.inject.Inject;
 public class WebSecurityConfig {
   private final UserDetailsServiceImpl userDetailsService;
 
-  private final AuthEntryPointJwt unauthorizedHandler;
+  private final AuthEntryPointJwt errorHandler;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -57,7 +57,7 @@ public class WebSecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable()
         .exceptionHandling()
-            .authenticationEntryPoint(unauthorizedHandler).and()
+            .authenticationEntryPoint(errorHandler).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeHttpRequests()
             .requestMatchers("/user/auth/**").permitAll()
