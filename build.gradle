@@ -88,7 +88,10 @@ dependencies {
     }
 
     compileOnly "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
+    runtimeOnly "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
+    testCompileOnly "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
     processAotClasspath "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
+    processTestAotClasspath "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
 
     // https://mvnrepository.com/artifact/com.azure/azure-sdk-bom
     implementation 'com.azure:azure-sdk-bom:1.2.14'

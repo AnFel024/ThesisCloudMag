@@ -49,7 +49,7 @@ public class DeploysService {
                 versionEntity.getTagName(),
                 createDeployDto.getIpDir(),
                 "AWS".equals(versionEntity.getProjectInfo().getInstanceInfo().getProvider()) ? "key.pem" : "id_rsa",
-                "python".equals(versionEntity.getProjectInfo().getLanguage()) ? "fline" : "deploy");
+                "python".equals(versionEntity.getProjectInfo().getLanguage()) ? "deploy_python" : "deploy");
         DeployEntity deployEntity = DeployEntity.builder()
                 .creator(userEntity)
                 .instanceInfo(versionEntity.getProjectInfo().getInstanceInfo())

@@ -124,7 +124,7 @@ public class ProjectService {
     private InstanceEntity getInstance(VirtualMachine virtualMachine) {
         InstanceEntity instanceEntity = InstanceEntity.builder()
                 .id(virtualMachine.id())
-                .hostUrl(virtualMachine.getPrimaryPublicIPAddress().leafDomainLabel())
+                .hostUrl(virtualMachine.getPrimaryPublicIPAddress().ipAddress())
                 .provider("AZURE")
                 .type(virtualMachine.size().toString())
                 .reservationId(null)
