@@ -1,16 +1,19 @@
 package com.antithesis.cloudmag.service;
 
 import com.azure.resourcemanager.AzureResourceManager;
+import com.azure.resourcemanager.billing.BillingManager;
 import com.azure.resourcemanager.compute.models.KnownLinuxVirtualMachineImage;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
 import com.azure.resourcemanager.compute.models.VirtualMachineSizeTypes;
+import com.azure.resourcemanager.costmanagement.CostManagementManager;
+import com.azure.resourcemanager.costmanagement.models.*;
 import com.azure.resourcemanager.network.models.NetworkSecurityGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Named;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -19,14 +22,20 @@ public class AzureManagementService {
 
     private static final String REGION = "eastus";
 
-    private static final String GROUP_NAME = "tesis-resource-groups";
+    public static final String GROUP_NAME = "tesis-resource-groups";
 
     private final String sshPublicKey;
     private final AzureResourceManager azureResourceManager;
+    private final BillingManager billingManager;
+    private final CostManagementManager costManagementManager;
 
     public AzureManagementService(@Qualifier("azure-vms-configuration") AzureResourceManager azureResourceManager,
+                                    @Qualifier("azure-billing-configuration") BillingManager billingManager,
+                                    @Qualifier("azure-cost-configuration") CostManagementManager costManagementManager,
                                   @Value("${ssh.public.key}") String sshPublicKey) {
         this.azureResourceManager = azureResourceManager;
+        this.billingManager = billingManager;
+        this.costManagementManager = costManagementManager;
         this.sshPublicKey = sshPublicKey;
     }
 
@@ -80,6 +89,15 @@ public class AzureManagementService {
                     throw new RuntimeException(throwable.getMessage());
                 })
                 .thenAccept(unused -> azureResourceManager.publicIpAddresses().deleteById(ipId));
+    }
+
+    public List<BlobInfo> describeCosts() {
+        GenerateCostDetailsReports generateCostDetailsReports = costManagementManager.generateCostDetailsReports();
+        GenerateCostDetailsReportRequestDefinition requestDefinition = new GenerateCostDetailsReportRequestDefinition()
+                    .withMetric(CostDetailsMetricType.ACTUAL_COST)
+                    .withTimePeriod(new CostDetailsTimePeriod().withStart("2023-07-10").withEnd("2023-08-09"));
+        return generateCostDetailsReports.createOperation(
+                "subscriptions/" + azureResourceManager.subscriptionId(), requestDefinition).blobs();
     }
 
 }

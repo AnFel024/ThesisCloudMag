@@ -1,7 +1,4 @@
-# Request
-  curl --location 'http://localhost:8088/audits/projects'
 
-# Response
   {
     "data": {
       "aws_date_range": {

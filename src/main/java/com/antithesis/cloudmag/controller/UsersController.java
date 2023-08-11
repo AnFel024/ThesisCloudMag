@@ -1,7 +1,7 @@
 package com.antithesis.cloudmag.controller;
 
-import com.antithesis.cloudmag.service.UserService;
 import com.antithesis.cloudmag.service.UserDetailsServiceImpl;
+import com.antithesis.cloudmag.service.UserService;
 import com.antithesis.cloudmag.utils.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

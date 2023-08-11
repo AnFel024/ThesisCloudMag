@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static java.lang.String.format;
@@ -125,7 +124,7 @@ public class ProjectService {
     private InstanceEntity getInstance(VirtualMachine virtualMachine) {
         InstanceEntity instanceEntity = InstanceEntity.builder()
                 .id(virtualMachine.id())
-                .hostUrl(virtualMachine.getPrimaryPublicIPAddress().ipAddress())
+                .hostUrl(virtualMachine.getPrimaryPublicIPAddress().leafDomainLabel())
                 .provider("AZURE")
                 .type(virtualMachine.size().toString())
                 .reservationId(null)
@@ -208,35 +207,43 @@ public class ProjectService {
     public MessageResponse validateInstanceStatus() {
         DescribeInstancesResponse describeInstancesResponse = awsManagementService.validateInstanceHealth();
         List<ProjectEntity> projectEntities = projectRepository.findAll();
-        projectEntities.stream().filter(projectEntity -> "PENDING".equals(projectEntity.getStatus().getStatusName())).forEach(
-                projectEntity -> {
-                    if ("AWS".equals(projectEntity.getInstanceInfo().getProvider())) {
-                        validateAwsInstances(describeInstancesResponse, projectEntity);
-                    } else {
-                        validateAzureInstances(projectEntity);
-                    }
-                });
+        projectEntities.stream()
+                .filter(projectEntity ->
+                        "PENDING".equals(projectEntity.getStatus().getStatusName())
+                                || "RETRYING".equals(projectEntity.getStatus().getStatusName()))
+                .forEach(
+                        projectEntity -> {
+                            if ("AWS".equals(projectEntity.getInstanceInfo().getProvider())) {
+                                validateAwsInstances(describeInstancesResponse, projectEntity);
+                            } else {
+                                validateAzureInstances(projectEntity);
+                            }
+                        });
         return MessageResponse.builder()
                 .message("Se ha validado el estado de las instancias")
                 .status(HttpStatus.OK)
                 .build();
     }
 
-    public void validateAwsInstances(DescribeInstancesResponse describeInstancesResponse, ProjectEntity projectEntity) {
-        describeInstancesResponse.reservations().forEach(reservation -> {
-            reservation.instances().forEach(instance -> {
-                if (projectEntity.getInstanceInfo().getId().equals(instance.instanceId())) {
-                    projectEntity.getInstanceInfo().setHostUrl(instance.publicDnsName());
-                    StatusEntity status = projectEntity.getStatus();
-                    status.setStatusName("APPROACHING");
-                    status.setUpdatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
-                    statusRepository.save(status);
-                    projectEntity.setStatus(status);
-                    jenkinsClient.triggerScaffoldingJob(instance.publicDnsName(), projectEntity.getName(), "key.pem");
-                    projectRepository.save(projectEntity);
-                }
-            });
-        });
+    public void validateAwsInstances(
+            DescribeInstancesResponse describeInstancesResponse,
+            ProjectEntity projectEntity) {
+        describeInstancesResponse.reservations().forEach(reservation -> reservation.instances()
+                .forEach(instance -> {
+                    if (projectEntity.getInstanceInfo().getId().equals(instance.instanceId())) {
+                        projectEntity.getInstanceInfo().setHostUrl(instance.publicDnsName());
+                        StatusEntity status = projectEntity.getStatus();
+                        status.setStatusName("APPROACHING");
+                        status.setUpdatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+                        statusRepository.save(status);
+                        projectEntity.setStatus(status);
+                        jenkinsClient.triggerScaffoldingJob(
+                                instance.publicDnsName(),
+                                projectEntity.getName(),
+                                "key.pem");
+                        projectRepository.save(projectEntity);
+            }
+        }));
     }
 
     public void validateAzureInstances(ProjectEntity projectEntity) {
@@ -252,22 +259,39 @@ public class ProjectService {
     public MessageResponse validateDatabaseStatus() {
         DescribeInstancesResponse describeInstancesResponse = awsManagementService.validateInstanceHealth();
         List<DatabaseEntity> databaseEntities = databaseRepository.findAll();
-        databaseEntities.stream().filter(databaseEntity -> "PENDING".equals(databaseEntity.getStatus())).forEach(databaseEntity -> {
-            describeInstancesResponse.reservations().forEach(reservation -> reservation.instances().forEach(instance -> {
-                if (databaseEntity.getProjectInfo().getInstanceInfo().getId().equals(instance.instanceId())
-                        && "CREATED".equals(databaseEntity.getProjectInfo().getStatus().getStatusName())) {
-                    databaseEntity.getProjectInfo().getInstanceInfo().setHostUrl(instance.publicDnsName());
-                    if ("postgres".equals(databaseEntity.getDbms())) {
-                        jenkinsClient.triggerDatabaseJob(instance.publicDnsName(), databaseEntity.getInitialPassword(), POSTGRES_TRIGGER, databaseEntity.getName());
+        databaseEntities.stream()
+                .filter(databaseEntity ->
+                        "PENDING".equals(databaseEntity.getStatus()) || "RETRYING".equals(databaseEntity.getStatus()))
+                .forEach(databaseEntity -> describeInstancesResponse
+                        .reservations()
+                        .forEach(reservation -> reservation
+                                .instances()
+                                .forEach(instance -> {
+                                    if (databaseEntity.getProjectInfo().getInstanceInfo()
+                                            .getId().equals(instance.instanceId())
+                                            && "CREATED".equals(databaseEntity.getProjectInfo()
+                                            .getStatus().getStatusName())) {
+                                        databaseEntity.getProjectInfo()
+                                                .getInstanceInfo()
+                                                .setHostUrl(instance.publicDnsName());
+                                    if ("postgres".equals(databaseEntity.getDbms())) {
+                                        jenkinsClient.triggerDatabaseJob(
+                                                instance.publicDnsName(),
+                                                databaseEntity.getInitialPassword(),
+                                                POSTGRES_TRIGGER,
+                                                databaseEntity.getName());
+                                    }
+                                    if ("mysql".equals(databaseEntity.getDbms())) {
+                                        jenkinsClient.triggerDatabaseJob(
+                                                instance.publicDnsName(),
+                                                databaseEntity.getInitialPassword(),
+                                                MYSQL_TRIGGER,
+                                                databaseEntity.getName());
+                                    }
+                        databaseEntity.setStatus("APPROACHING");
+                        databaseRepository.save(databaseEntity);
                     }
-                    if ("mysql".equals(databaseEntity.getDbms())) {
-                        jenkinsClient.triggerDatabaseJob(instance.publicDnsName(), databaseEntity.getInitialPassword(), MYSQL_TRIGGER, databaseEntity.getName());
-                    }
-                    databaseEntity.setStatus("APPROACHING");
-                    databaseRepository.save(databaseEntity);
-                }
-            }));
-        });
+                })));
         return MessageResponse.builder()
                 .message("Se ha validado el estado de las bases de datos")
                 .status(HttpStatus.OK)

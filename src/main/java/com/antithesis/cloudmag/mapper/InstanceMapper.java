@@ -7,8 +7,6 @@ import org.mapstruct.MappingConstants;
 
 import java.util.Set;
 
-import static org.mapstruct.factory.Mappers.getMapper;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface InstanceMapper {
 

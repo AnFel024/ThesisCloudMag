@@ -3,7 +3,6 @@ package com.antithesis.cloudmag.mapper;
 import com.antithesis.cloudmag.entity.DeployEntity;
 import com.antithesis.cloudmag.model.Deploy;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.Set;
 

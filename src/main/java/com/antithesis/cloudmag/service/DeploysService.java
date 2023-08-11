@@ -4,16 +4,20 @@ import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
 import com.antithesis.cloudmag.controller.payload.request.CreateDeployDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
-import com.antithesis.cloudmag.entity.*;
+import com.antithesis.cloudmag.entity.DeployEntity;
+import com.antithesis.cloudmag.entity.UserEntity;
+import com.antithesis.cloudmag.entity.VersionEntity;
 import com.antithesis.cloudmag.mapper.DeployMapper;
 import com.antithesis.cloudmag.model.Deploy;
-import com.antithesis.cloudmag.repository.*;
+import com.antithesis.cloudmag.repository.DeployRepository;
+import com.antithesis.cloudmag.repository.ProjectRepository;
+import com.antithesis.cloudmag.repository.UserRepository;
+import com.antithesis.cloudmag.repository.VersionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +49,7 @@ public class DeploysService {
                 versionEntity.getTagName(),
                 createDeployDto.getIpDir(),
                 "AWS".equals(versionEntity.getProjectInfo().getInstanceInfo().getProvider()) ? "key.pem" : "id_rsa",
-                "python".equals(versionEntity.getProjectInfo().getLanguage()) ? "deploy_python" : "deploy");
+                "python".equals(versionEntity.getProjectInfo().getLanguage()) ? "fline" : "deploy");
         DeployEntity deployEntity = DeployEntity.builder()
                 .creator(userEntity)
                 .instanceInfo(versionEntity.getProjectInfo().getInstanceInfo())

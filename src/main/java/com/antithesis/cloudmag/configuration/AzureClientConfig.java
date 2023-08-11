@@ -7,15 +7,12 @@ import com.azure.core.management.profile.AzureProfile;
 import com.azure.identity.AzureAuthorityHosts;
 import com.azure.identity.EnvironmentCredentialBuilder;
 import com.azure.resourcemanager.AzureResourceManager;
+import com.azure.resourcemanager.billing.BillingManager;
+import com.azure.resourcemanager.costmanagement.CostManagementManager;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.ec2.Ec2Client;
 
 @Configuration
 public class AzureClientConfig {
@@ -35,5 +32,34 @@ public class AzureClientConfig {
                 .withLogLevel(HttpLogDetailLevel.BASIC)
                 .authenticate(credential, profile)
                 .withDefaultSubscription();
+    }
+
+    @Bean
+    @Primary
+    @Qualifier("azure-cost-configuration")
+    public static CostManagementManager setAzureCostConfiguration() {
+
+        TokenCredential credential = new EnvironmentCredentialBuilder()
+                .authorityHost(AzureAuthorityHosts.AZURE_PUBLIC_CLOUD)
+                .build();
+
+        AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
+
+        return CostManagementManager.authenticate(credential, profile);
+    }
+
+
+    @Bean
+    @Primary
+    @Qualifier("azure-billing-configuration")
+    public static BillingManager setAzureBillingConfiguration() {
+
+        TokenCredential credential = new EnvironmentCredentialBuilder()
+                .authorityHost(AzureAuthorityHosts.AZURE_PUBLIC_CLOUD)
+                .build();
+
+        AzureProfile profile = new AzureProfile(AzureEnvironment.AZURE);
+
+        return BillingManager.authenticate(credential, profile);
     }
 }

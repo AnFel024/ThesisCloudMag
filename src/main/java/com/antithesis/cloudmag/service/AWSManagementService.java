@@ -7,7 +7,10 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
-import software.amazon.awssdk.services.costexplorer.model.*;
+import software.amazon.awssdk.services.costexplorer.model.DateInterval;
+import software.amazon.awssdk.services.costexplorer.model.GetCostAndUsageRequest;
+import software.amazon.awssdk.services.costexplorer.model.GetCostAndUsageResponse;
+import software.amazon.awssdk.services.costexplorer.model.Granularity;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
 
@@ -91,8 +94,7 @@ public class AWSManagementService {
                 .metrics("BlendedCost")
                 .build();
 
-        GetCostAndUsageResponse costAndUsage = costExplorerClient.getCostAndUsage(request);
-        return costAndUsage;
+        return costExplorerClient.getCostAndUsage(request);
 
     }
 }
