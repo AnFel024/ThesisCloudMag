@@ -25,7 +25,7 @@ public class AuditsResponse {
     @Builder
     @Data
     public static class AwsDateRange {
-        private Double monthlyCost;
+        private String monthlyCost;
         private List<AwsRanges> ranges;
     }
 
@@ -35,6 +35,6 @@ public class AuditsResponse {
     @Data
     public static class AwsRanges {
         private String data;
-        private Double cost;
+        private String cost;
     }
 }
