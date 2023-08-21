@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.costexplorer.model.Granularity;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static software.amazon.awssdk.regions.Region.US_EAST_1;
@@ -85,10 +86,16 @@ public class AWSManagementService {
     }
 
     public GetCostAndUsageResponse describeCosts() {
+        LocalDate localDate = LocalDate.now();
+        String year = String.valueOf(localDate.getYear());
+        int monthValue = localDate.getMonthValue();
+        String month = monthValue < 10 ? "0" + monthValue : String.valueOf(monthValue);
+        int dayValue = localDate.getDayOfMonth();
+        String day = dayValue < 10 ? "0" + dayValue : String.valueOf(dayValue);
         GetCostAndUsageRequest request = GetCostAndUsageRequest.builder()
                 .timePeriod(DateInterval.builder()
-                        .start("2023-08-01")
-                        .end("2023-08-09")
+                        .start(year + "-" + month + "-" + "01")
+                        .end(year + "-" + month + "-" + day)
                         .build())
                 .granularity(Granularity.DAILY)
                 .metrics("BlendedCost")

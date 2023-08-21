@@ -1,6 +1,5 @@
 package com.antithesis.cloudmag.service;
 
-import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
 import com.antithesis.cloudmag.controller.payload.request.CreateDeployDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
@@ -34,7 +33,6 @@ public class DeploysService {
     private final DeployRepository deployRepository;
     private final UserRepository userRepository;
     private final JenkinsClient jenkinsClient;
-    private final DogStatsdClient dogStatsdClient;
 
     public MessageResponse<String> createDeploy(CreateDeployDto createDeployDto) {
         UserEntity userEntity = userRepository.findById(

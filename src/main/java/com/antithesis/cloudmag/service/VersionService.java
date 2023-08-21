@@ -1,6 +1,5 @@
 package com.antithesis.cloudmag.service;
 
-import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
 import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
@@ -32,7 +31,6 @@ public class VersionService {
     private final JenkinsClient jenkinsClient;
     private final UserRepository userRepository;
     private final VersionMapper versionMapper;
-    private final DogStatsdClient dogStatsdClient;
 
 
     public MessageResponse<?> createVersion(CreateVersionDto createVersionDto) {

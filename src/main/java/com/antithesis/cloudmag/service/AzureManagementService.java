@@ -45,7 +45,12 @@ public class AzureManagementService {
                 .withNewPrimaryPublicIPAddress(name + "-ip")
                 .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_20_04_LTS)
                 .withRootUsername("ubuntu")
-                .withSsh("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVBBWMIO59CwUpdPmEBjueoiS/vp8qe4oOW+Qnf6Eees2p5K5XxvOFMmTVN7QcjGR0K6bK0H6oj2NL6l1JJTNWYDNRM6kPIY6qCyw/Gbs6HJyb7/ypPfJUF1X/pUkjrK+McuxhKFNVr4JbJLdx91ZmmZJ5+P2aVL+qrANrFKY1ZE1Kl2k744J7Xa+B8kv/EUENpmRnr5sj47U4uExuRMGzdRasbBz6M/AfdDokE427VXBybh00JIzYZtOl9/hD42JySg2mXM3GNssirrNJvSAfmvWm/IMFCDw8XrSJkv3YretL5U+riT/OfXddRz0wLQAbT13QsjZnWc7KEVHz8nRVxZ3nz/dFGn3FQ4morKsDkqxA5UlD9Fa09myqItCDy+8ElhJ3REhYCOGmGjOK/nVVLsgIgRQW3wcauB/QsjHHK7H1TvzGFOL6XqCnqzly0g/mTWDAh0kwdyT3YJ22sejS/0Df/eLH/aKJccmsamwmVsrg9VMqYduLQ64egA+BVgYkvld8ixmPIop9NlyPDC/5haM6KEUC7TPweIrXCXgKP2c8raQsXhblROjWg9WG72AESATfRUlmrzqLO8Tqunggnoussx1/MeaOdJCTulIUdX/Bdj1xjaP7aFSCBK19GmZEHRjDRYE/DQ8ZzAqCJ5UrFYmpfpUd0lI8ADOmBJ22ow== anfelpe.0200@gmail.com")
+                .withSsh("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCj+Yg9D5CGjiNPKMIDW9Wdvz+" +
+                        "45RWLJ+" +
+                        "Vlw4Ev6JROx209AUdtIYRVMfQdINy9l5fgGZLK7L7sOg1JnDFQGgr9kw7Ck3KRE3RfUvYZOC1" +
+                        "cJ9xIo2JKrXJWmyebOnpIUzTCd45WweLT/5E/mvQ3syFOmrBuLAzZHYYW3tnkKhrGPQ" +
+                        "== " +
+                        "anfelpe.0200@gmail.com+")
                 .withSize(VirtualMachineSizeTypes.STANDARD_D2S_V3)
                 .create();
         NetworkSecurityGroup grupo1 = azureResourceManager.networkSecurityGroups().getByResourceGroup(GROUP_NAME, "Grupo1");

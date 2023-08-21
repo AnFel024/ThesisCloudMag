@@ -1,6 +1,5 @@
 package com.antithesis.cloudmag.service;
 
-import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.GitHubClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
 import com.antithesis.cloudmag.client.responses.GitHubCreateRepositoryResponse;
@@ -16,6 +15,7 @@ import com.antithesis.cloudmag.model.Project;
 import com.antithesis.cloudmag.repository.*;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
 
@@ -50,7 +51,6 @@ public class ProjectService {
     private final AWSManagementService awsManagementService;
     private final AzureManagementService azureManagementService;
     private final ProjectMapper projectMapper;
-    private final DogStatsdClient dogStatsdClient;
     private final JenkinsClient jenkinsClient;
     private final DatabaseMapper databaseMapper;
     private final VersionRepository versionRepository;
@@ -169,7 +169,6 @@ public class ProjectService {
 
     public MessageResponse<List<Project>> listProjects() {
         // TODO pasar long fecha a localdatetime
-        dogStatsdClient.sendMetric();
         List<ProjectEntity> allByCreator = projectRepository.findAll();
         List<Project> projects = allByCreator.stream()
                 .map(projectEntity -> {
@@ -188,7 +187,6 @@ public class ProjectService {
 
     public MessageResponse<List<Database>> listDatabases() {
         // TODO pasar long fecha a localdatetime
-        dogStatsdClient.sendMetric();
         List<Database> projects = databaseRepository.findAll().stream()
                 .map(databaseEntity -> {
                     Database database = databaseMapper.mapToDatabase(databaseEntity);
@@ -256,7 +254,9 @@ public class ProjectService {
         projectRepository.save(projectEntity);
     }
 
+    @SneakyThrows
     public MessageResponse validateDatabaseStatus() {
+        TimeUnit.SECONDS.sleep(10);
         DescribeInstancesResponse describeInstancesResponse = awsManagementService.validateInstanceHealth();
         List<DatabaseEntity> databaseEntities = databaseRepository.findAll();
         databaseEntities.stream()
