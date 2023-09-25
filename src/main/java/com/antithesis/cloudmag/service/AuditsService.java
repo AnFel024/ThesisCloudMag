@@ -4,22 +4,22 @@ import com.antithesis.cloudmag.controller.payload.response.AuditsResponse;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
 import com.antithesis.cloudmag.entity.ProjectEntity;
 import com.antithesis.cloudmag.mapper.ProjectMapper;
+import com.antithesis.cloudmag.model.Project;
 import com.antithesis.cloudmag.repository.ProjectRepository;
 import com.azure.resourcemanager.costmanagement.models.BlobInfo;
 import com.google.common.util.concurrent.AtomicDouble;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.costexplorer.model.GetCostAndUsageResponse;
 import software.amazon.awssdk.services.costexplorer.model.MetricValue;
 
 import javax.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
-import static java.lang.String.valueOf;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -46,7 +46,7 @@ public class AuditsService {
     private final ProjectMapper projectMapper;
 
     public MessageResponse<AuditsResponse> audits() {
-        //List<BlobInfo> blobInfos = azureManagementService.describeCosts();
+//        List<BlobInfo> blobInfos = azureManagementService.describeCosts();
         GetCostAndUsageResponse getCostAndUsageResponse = awsManagementService.describeCosts();
         // TODO Se manda dummy para no hacer llamadas a AWS y generar costos, habilitar en expo
         List<ProjectEntity> projectEntities = projectRepository.findAll();
@@ -73,7 +73,13 @@ public class AuditsService {
         AuditsResponse.AuditsResponseBuilder response = AuditsResponse.builder();
                 response.awsProjects(projectEntities.stream()
                         .filter(projectEntity -> "AWS".equals(projectEntity.getInstanceInfo().getProvider()))
-                        .map(projectMapper::mapToProject)
+                        .map(projectEntity1 -> {
+                            Project project = projectMapper.mapToProject(projectEntity1);
+                            project.setDate(LocalDateTime.ofInstant(
+                                    java.time.Instant.ofEpochMilli(projectEntity1.getCreatedAt()),
+                                    java.time.ZoneId.systemDefault()).toString());
+                            return project;
+                        })
                         .toList());
         response.azureProjects(projectEntities.stream()
                         .filter(projectEntity -> "AZURE".equals(projectEntity.getInstanceInfo().getProvider()))
@@ -81,13 +87,12 @@ public class AuditsService {
                         .toList());
 //        response.azureUrlInvoice(blobInfos.get(0).blobLink());
         response.azureUrlInvoice(
-                        "https://ccmreportstoragewestus.blob.core.windows.net/" +
+                        "https://ccmreportstorageeastus2.blob.core.windows.net/" +
                                 "armmusagedetailsreportdownloadcontainer/" +
-                                "20230821/" +
-                                "486acd6e-8d0b-497f-b256-9c0f4ae2331e" +
-                                "?sv=2018-03-28&sr=b" +
-                                "&sig=PBzrNw4XQRyGAVGqZIiJiF%2FwXNNNl7v1EuxTSsgPOuc%3D&spr=https" +
-                                "&st=2023-08-21T20%3A22%3A26Z&se=2023-08-22T08%3A27%3A26Z&sp=r"
+                                "20230925/" +
+                                "b563316b-58ce-47f1-a722-d5fddd4a5978?sv=2018-03-28" +
+                                "&sr=b&sig=qyGvg61ov0sUoZv7%2Fmz4qNltyQN4XCOhBjU6B24BlvA%3D" +
+                                "&spr=https&st=2023-09-25T02%3A04%3A52Z&se=2023-09-25T14%3A09%3A52Z&sp=r"
                 );
         response.awsDateRange(
                 AuditsResponse.AwsDateRange.builder()
