@@ -26,6 +26,7 @@ import software.amazon.awssdk.services.ec2.model.RunInstancesResponse;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -96,13 +97,13 @@ public class ProjectService {
         UserEntity userEntity = userRepository.findById(createAppDto.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
         StatusEntity statusEntity = StatusEntity.builder()
                 .statusName("PENDING")
-                .updatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .updatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .updatedBy(userEntity)
                 .build();
         statusRepository.save(statusEntity);
         return ProjectEntity.builder()
                 .name(createAppDto.getName())
-                .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .instanceInfo(instanceEntity)
                 .status(statusEntity)
                 .creator(userEntity)
@@ -150,7 +151,7 @@ public class ProjectService {
         String randomPass = RandomStringUtils.randomAlphabetic(10);
         DatabaseEntity project = DatabaseEntity.builder()
                 .name(createDatabaseDto.getName())
-                .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .dbms(createDatabaseDto.getDbms_type())
                 .creator(userEntity)
                 .initialPassword(randomPass)
@@ -232,7 +233,7 @@ public class ProjectService {
                         projectEntity.getInstanceInfo().setHostUrl(instance.publicDnsName());
                         StatusEntity status = projectEntity.getStatus();
                         status.setStatusName("APPROACHING");
-                        status.setUpdatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+                        status.setUpdatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli());
                         statusRepository.save(status);
                         projectEntity.setStatus(status);
                         jenkinsClient.triggerScaffoldingJob(
@@ -247,7 +248,7 @@ public class ProjectService {
     public void validateAzureInstances(ProjectEntity projectEntity) {
         StatusEntity status = projectEntity.getStatus();
         status.setStatusName("APPROACHING");
-        status.setUpdatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+        status.setUpdatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli());
         statusRepository.save(status);
         projectEntity.setStatus(status);
         jenkinsClient.triggerScaffoldingJob(projectEntity.getInstanceInfo().getHostUrl(), projectEntity.getName(), "id_rsa");
@@ -351,7 +352,7 @@ public class ProjectService {
         futureOfDeploys.thenCombine(futureOfVersions, (unused, unused2) -> {
             StatusEntity status = projectEntity.getStatus();
             status.setStatusName("DELETED");
-            status.setUpdatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+            status.setUpdatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli());
             status.setUpdatedBy(userEntity);
             statusRepository.save(status);
             projectEntity.setStatus(status);

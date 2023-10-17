@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,7 +53,7 @@ public class DeploysService {
                 .creator(userEntity)
                 .instanceInfo(versionEntity.getProjectInfo().getInstanceInfo())
                 .versionInfo(versionEntity)
-                .createdAt(LocalDateTime.now().toInstant(java.time.ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(java.time.ZoneOffset.UTC).toEpochMilli())
                 .status(success ? "SUCCESS" : "FAILED")
                 .build();
         deployRepository.save(deployEntity);

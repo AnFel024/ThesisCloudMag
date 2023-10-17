@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
@@ -50,7 +51,7 @@ public class VersionService {
         );
         VersionEntity versionEntity = VersionEntity.builder()
                 .name(createVersionDto.getTag())
-                .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .tagName(createVersionDto.getTag())
                 .branchName(branchName)
                 .creator(userRepository.findById(createVersionDto.getUsername()).get())

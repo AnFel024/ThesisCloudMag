@@ -87,13 +87,11 @@ public class AuditsService {
                         .toList());
 //        response.azureUrlInvoice(blobInfos.get(0).blobLink());
         response.azureUrlInvoice(
-                        "https://ccmreportstorageeastus2.blob.core.windows.net/" +
-                                "armmusagedetailsreportdownloadcontainer/" +
-                                "20230925/" +
-                                "b563316b-58ce-47f1-a722-d5fddd4a5978?sv=2018-03-28" +
-                                "&sr=b&sig=qyGvg61ov0sUoZv7%2Fmz4qNltyQN4XCOhBjU6B24BlvA%3D" +
-                                "&spr=https&st=2023-09-25T02%3A04%3A52Z&se=2023-09-25T14%3A09%3A52Z&sp=r"
-                );
+                        "https://ccmreportstoragenortheu.blob.core.windows.net/" +
+                                "armmusagedetailsreportdownloadcontainer/20231017/" +
+                                "0e7cc98f-ea47-4240-87ee-f3570698c2a7" +
+                                "?sv=2018-03-28&sr=b&sig=iMbhSxhj7vTzemkGG5lgBiljczsCSiDtOJ9DyAvzv14%3D&spr=https" +
+                                "&st=2023-10-17T00%3A16%3A57Z&se=2023-10-17T12%3A21%3A57Z&sp=r");
         response.awsDateRange(
                 AuditsResponse.AwsDateRange.builder()
                         .ranges(awsRanges)

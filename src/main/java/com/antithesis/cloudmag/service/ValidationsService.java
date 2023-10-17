@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public class ValidationsService {
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         StatusEntity statusEntity = projectEntity.getStatus();
         statusEntity.setStatusName(status);
-        statusEntity.setUpdatedAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli());
+        statusEntity.setUpdatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli());
         statusRepository.save(statusEntity);
         projectEntity.setStatus(statusEntity);
         projectRepository.save(projectEntity);
