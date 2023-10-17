@@ -1,0 +1,37 @@
+
+  {
+    "data": {
+      "aws_date_range": {
+        "monthly_cost": "0.4843978842 USD",
+        "ranges": [
+          {
+            "data": "2017-01-01",
+            "cost": "0.2421989421 USD"
+          },
+          {
+            "data": "2017-01-02",
+            "cost": "0.2421989421 USD"
+          }
+        ]
+      },
+      "azure_date_range": {
+        "monthly_cost": "0.4843978842 USD",
+        "ranges": [
+          {
+            "data": "2017-01-01",
+            "cost": "0.2421989421 USD"
+          },
+          {
+            "data": "2017-01-02",
+            "cost": "0.2421989421 USD"
+          }
+        ]
+      },
+      "aws_projects": {info de proyectos},
+      "azure_projects": {info de proyectos},
+      "datadog_url": "https://app.datadoghq.com/dash/1234567890/1234567890?from_ts=1483228800000&to_ts=1485907200000&live=true",
+      "new_relic_url": "https://rpm.newrelic.com/accounts/123456789/applications/123456789?tw%5Bend%5D=1485907200000&tw%5Bstart%5D=1483228800000"
+    },
+    "message": "audits",
+    "status": 200
+  }

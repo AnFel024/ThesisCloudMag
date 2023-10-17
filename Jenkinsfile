@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Checkout code') {
             steps {
-                git(url: PROJECT_URL, branch: BRANCH, credentialsId: 'gh-token-auth')
+                git(url: PROJECT_URL, branch: BRANCH, credentialsId: 'github-auth')
             }
         }
         stage('build gradle') {

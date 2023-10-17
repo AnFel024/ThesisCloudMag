@@ -7,7 +7,10 @@ import com.antithesis.cloudmag.service.ValidationsService;
 import com.antithesis.cloudmag.utils.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 
@@ -20,27 +23,27 @@ public class ValidationController {
     private final AzureManagementService azureManagementService;
     private final ProjectService projectService;
 
-    @GetMapping("/project_created/{projectName}")
-    public ResponseEntity<?> refreshProject(@PathVariable String projectName) {
-        MessageResponse<?> messageResponse = validationsService.validateProject(projectName);
+    @GetMapping("/project/{projectName}/status/{status}")
+    public ResponseEntity<?> refreshProject(@PathVariable String projectName, @PathVariable String status) {
+        MessageResponse<?> messageResponse = validationsService.validateProject(projectName, status);
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/database_created/{databaseName}")
-    public ResponseEntity<?> refreshDatabase(@PathVariable String databaseName) {
-        MessageResponse<?> messageResponse = validationsService.validateDatabase(databaseName);
+    @GetMapping("/database/{databaseName}/status/{status}")
+    public ResponseEntity<?> refreshDatabase(@PathVariable String databaseName, @PathVariable String status) {
+        MessageResponse<?> messageResponse = validationsService.validateDatabase(databaseName, status);
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/version_created/{versionId}")
-    public ResponseEntity<?> refreshVersion(@PathVariable String versionId) {
-        MessageResponse<?> messageResponse = validationsService.validateVersion(versionId);
+    @GetMapping("/version/{versionId}/status/{status}")
+    public ResponseEntity<?> refreshVersion(@PathVariable String versionId, @PathVariable String status) {
+        MessageResponse<?> messageResponse = validationsService.validateVersion(versionId, status);
         return ResponseUtils.validateResponse(messageResponse);
     }
 
-    @GetMapping("/deploy_created/{deployName}/tag/{versionId}")
-    public ResponseEntity<?> refreshDeploy(@PathVariable String deployName, @PathVariable String versionId) {
-        MessageResponse<?> messageResponse = validationsService.validateDeploy(deployName, versionId);
+    @GetMapping("/deploy/{deployName}/tag/{versionId}/status/{status}")
+    public ResponseEntity<?> refreshDeploy(@PathVariable String deployName, @PathVariable String versionId, @PathVariable String status) {
+        MessageResponse<?> messageResponse = validationsService.validateDeploy(deployName, versionId, status);
         return ResponseUtils.validateResponse(messageResponse);
     }
 

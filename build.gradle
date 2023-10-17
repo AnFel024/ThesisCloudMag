@@ -87,6 +87,12 @@ dependencies {
         //com.fasterxml.jackson.core:jackson-databind:2.15.2
     }
 
+    compileOnly "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
+    runtimeOnly "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
+    testCompileOnly "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
+    processAotClasspath "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
+    processTestAotClasspath "com.azure.resourcemanager:azure-resourcemanager-costmanagement:1.0.0-beta.6"
+
     // https://mvnrepository.com/artifact/com.azure/azure-sdk-bom
     implementation 'com.azure:azure-sdk-bom:1.2.14'
 
@@ -100,6 +106,9 @@ dependencies {
 
     // Validations
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '8.0.0.Final'
+
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/costexplorer
+    implementation 'software.amazon.awssdk:costexplorer:2.20.121'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

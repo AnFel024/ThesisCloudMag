@@ -3,18 +3,37 @@ package com.antithesis.cloudmag.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.costexplorer.CostExplorerClient;
+import software.amazon.awssdk.services.costexplorer.model.DateInterval;
+import software.amazon.awssdk.services.costexplorer.model.GetCostAndUsageRequest;
+import software.amazon.awssdk.services.costexplorer.model.GetCostAndUsageResponse;
+import software.amazon.awssdk.services.costexplorer.model.Granularity;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import static software.amazon.awssdk.regions.Region.US_EAST_1;
 
 @Service
 @Slf4j
 public class AWSManagementService {
     private final Ec2Client ec2Client;
+    private final CostExplorerClient costExplorerClient;
 
-    public AWSManagementService(@Qualifier("ec2-instances-configuration") Ec2Client ec2Client) {
-        this.ec2Client = ec2Client;
+    public AWSManagementService(@Qualifier("ec2-instances-configuration") AwsBasicCredentials awsBasicCredentials) {
+        this.ec2Client = Ec2Client.builder()
+                .region(US_EAST_1)
+                .credentialsProvider(StaticCredentialsProvider.create(awsBasicCredentials))
+                .build();
+        this.costExplorerClient = CostExplorerClient.builder()
+                .region(Region.US_EAST_1)
+                .credentialsProvider(StaticCredentialsProvider.create(awsBasicCredentials))
+                .build();
     }
 
     public RunInstancesResponse generateInstance(InstanceType instanceType) {
@@ -64,5 +83,25 @@ public class AWSManagementService {
 
     public DescribeInstancesResponse validateInstanceHealth() {
         return ec2Client.describeInstances();
+    }
+
+    public GetCostAndUsageResponse describeCosts() {
+        LocalDate localDate = LocalDate.now();
+        String year = String.valueOf(localDate.getYear());
+        int monthValue = localDate.getMonthValue();
+        String month = monthValue < 10 ? "0" + monthValue : String.valueOf(monthValue);
+        int dayValue = localDate.getDayOfMonth();
+        String day = dayValue < 10 ? "0" + dayValue : String.valueOf(dayValue);
+        GetCostAndUsageRequest request = GetCostAndUsageRequest.builder()
+                .timePeriod(DateInterval.builder()
+                        .start(year + "-" + month + "-" + "01")
+                        .end(year + "-" + month + "-" + day)
+                        .build())
+                .granularity(Granularity.DAILY)
+                .metrics("BlendedCost")
+                .build();
+
+        return costExplorerClient.getCostAndUsage(request);
+
     }
 }

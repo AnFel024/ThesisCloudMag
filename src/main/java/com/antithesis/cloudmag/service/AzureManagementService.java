@@ -4,13 +4,15 @@ import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.compute.models.KnownLinuxVirtualMachineImage;
 import com.azure.resourcemanager.compute.models.VirtualMachine;
 import com.azure.resourcemanager.compute.models.VirtualMachineSizeTypes;
+import com.azure.resourcemanager.costmanagement.CostManagementManager;
+import com.azure.resourcemanager.costmanagement.models.*;
 import com.azure.resourcemanager.network.models.NetworkSecurityGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Named;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -19,14 +21,17 @@ public class AzureManagementService {
 
     private static final String REGION = "eastus";
 
-    private static final String GROUP_NAME = "tesis-resource-groups";
+    public static final String GROUP_NAME = "tesis-resource-groups";
 
     private final String sshPublicKey;
     private final AzureResourceManager azureResourceManager;
+    private final CostManagementManager costManagementManager;
 
     public AzureManagementService(@Qualifier("azure-vms-configuration") AzureResourceManager azureResourceManager,
+                                    @Qualifier("azure-cost-configuration") CostManagementManager costManagementManager,
                                   @Value("${ssh.public.key}") String sshPublicKey) {
         this.azureResourceManager = azureResourceManager;
+        this.costManagementManager = costManagementManager;
         this.sshPublicKey = sshPublicKey;
     }
 
@@ -40,7 +45,12 @@ public class AzureManagementService {
                 .withNewPrimaryPublicIPAddress(name + "-ip")
                 .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_20_04_LTS)
                 .withRootUsername("ubuntu")
-                .withSsh("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVBBWMIO59CwUpdPmEBjueoiS/vp8qe4oOW+Qnf6Eees2p5K5XxvOFMmTVN7QcjGR0K6bK0H6oj2NL6l1JJTNWYDNRM6kPIY6qCyw/Gbs6HJyb7/ypPfJUF1X/pUkjrK+McuxhKFNVr4JbJLdx91ZmmZJ5+P2aVL+qrANrFKY1ZE1Kl2k744J7Xa+B8kv/EUENpmRnr5sj47U4uExuRMGzdRasbBz6M/AfdDokE427VXBybh00JIzYZtOl9/hD42JySg2mXM3GNssirrNJvSAfmvWm/IMFCDw8XrSJkv3YretL5U+riT/OfXddRz0wLQAbT13QsjZnWc7KEVHz8nRVxZ3nz/dFGn3FQ4morKsDkqxA5UlD9Fa09myqItCDy+8ElhJ3REhYCOGmGjOK/nVVLsgIgRQW3wcauB/QsjHHK7H1TvzGFOL6XqCnqzly0g/mTWDAh0kwdyT3YJ22sejS/0Df/eLH/aKJccmsamwmVsrg9VMqYduLQ64egA+BVgYkvld8ixmPIop9NlyPDC/5haM6KEUC7TPweIrXCXgKP2c8raQsXhblROjWg9WG72AESATfRUlmrzqLO8Tqunggnoussx1/MeaOdJCTulIUdX/Bdj1xjaP7aFSCBK19GmZEHRjDRYE/DQ8ZzAqCJ5UrFYmpfpUd0lI8ADOmBJ22ow== anfelpe.0200@gmail.com")
+                .withSsh("ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQCj+Yg9D5CGjiNPKMIDW9Wdvz+" +
+                        "45RWLJ+" +
+                        "Vlw4Ev6JROx209AUdtIYRVMfQdINy9l5fgGZLK7L7sOg1JnDFQGgr9kw7Ck3KRE3RfUvYZOC1" +
+                        "cJ9xIo2JKrXJWmyebOnpIUzTCd45WweLT/5E/mvQ3syFOmrBuLAzZHYYW3tnkKhrGPQ" +
+                        "== " +
+                        "anfelpe.0200@gmail.com+")
                 .withSize(VirtualMachineSizeTypes.STANDARD_D2S_V3)
                 .create();
         NetworkSecurityGroup grupo1 = azureResourceManager.networkSecurityGroups().getByResourceGroup(GROUP_NAME, "Grupo1");
@@ -80,6 +90,15 @@ public class AzureManagementService {
                     throw new RuntimeException(throwable.getMessage());
                 })
                 .thenAccept(unused -> azureResourceManager.publicIpAddresses().deleteById(ipId));
+    }
+
+    public List<BlobInfo> describeCosts() {
+        GenerateCostDetailsReports generateCostDetailsReports = costManagementManager.generateCostDetailsReports();
+        GenerateCostDetailsReportRequestDefinition requestDefinition = new GenerateCostDetailsReportRequestDefinition()
+                    .withMetric(CostDetailsMetricType.ACTUAL_COST)
+                    .withTimePeriod(new CostDetailsTimePeriod().withStart("2023-07-10").withEnd("2023-08-09"));
+        return generateCostDetailsReports.createOperation(
+                "subscriptions/" + azureResourceManager.subscriptionId(), requestDefinition).blobs();
     }
 
 }

@@ -27,12 +27,14 @@ public class JenkinsClient {
                                      String appName,
                                      String branchName,
                                      String versionTag,
-                                     String versionId) {
+                                     String versionId,
+                                     String language) {
         String params = String.join("&", java.util.List.of("token=my_token",
                 "version_id=" + versionId,
                 "app_name="+ appName,
                 "app_url=" + appUrl,
                 "branch_name=" + branchName,
+                "language=" + language,
                 "version_tag=" + versionTag));
         return triggerInJenkins(params, "createversion");
     }
@@ -47,10 +49,13 @@ public class JenkinsClient {
     }
 
     @SneakyThrows
-    public Boolean triggerDeployJob(String versionId, String dockerImageName, String dockerImageTag, String ipDir, String keyType) {
+    public Boolean triggerDeployJob(
+            String versionId, String dockerImageName, String dockerImageTag,
+            String ipDir, String keyType, String filename) {
         String params = String.join("&", java.util.List.of("token=my_token",
                 "key_type=" + keyType,
                 "version_id=" + versionId,
+                "filename=" + filename,
                 "app_name=" + dockerImageName,
                 "docker_container_name=" + dockerImageName,
                 "docker_image_name=" + dockerImageName,

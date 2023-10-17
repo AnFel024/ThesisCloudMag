@@ -12,6 +12,7 @@ import java.util.Set;
         UserMapper.class
 })
 public interface ProjectMapper {
+    @Mapping(target = "date", ignore = true)
     Project mapToProject(ProjectEntity projectEntity);
 
     Set<Project> mapToProjectSet(Set<ProjectEntity> projectEntitySet);

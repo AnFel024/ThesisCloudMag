@@ -1,6 +1,5 @@
 package com.antithesis.cloudmag.service;
 
-import com.antithesis.cloudmag.client.DogStatsdClient;
 import com.antithesis.cloudmag.client.JenkinsClient;
 import com.antithesis.cloudmag.controller.payload.request.CreateVersionDto;
 import com.antithesis.cloudmag.controller.payload.response.MessageResponse;
@@ -17,11 +16,13 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
 import static java.lang.String.format;
+import static java.time.ZoneId.SHORT_IDS;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -32,7 +33,6 @@ public class VersionService {
     private final JenkinsClient jenkinsClient;
     private final UserRepository userRepository;
     private final VersionMapper versionMapper;
-    private final DogStatsdClient dogStatsdClient;
 
 
     public MessageResponse<?> createVersion(CreateVersionDto createVersionDto) {
@@ -40,17 +40,19 @@ public class VersionService {
         String branchName = split.length == 1 ? split[0] : split[0] + "/" + split[1];
 
         UUID uuid = UUID.randomUUID();
+        ProjectEntity byName = projectRepository.findByName(createVersionDto.getAppName())
+                .orElseThrow(() -> new RuntimeException("Project not found"));;
         Boolean versionTriggered = jenkinsClient.triggerVersionJob(
                 createVersionDto.getAppUrl(),
                 createVersionDto.getAppName(),
                 branchName,
                 createVersionDto.getTag(),
-                uuid.toString()
+                uuid.toString(),
+                byName.getLanguage()
         );
-        ProjectEntity byName = projectRepository.findByName(createVersionDto.getAppName()).orElseThrow(() -> new RuntimeException("Project not found"));;
         VersionEntity versionEntity = VersionEntity.builder()
                 .name(createVersionDto.getTag())
-                .createdAt(LocalDateTime.now().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .tagName(createVersionDto.getTag())
                 .branchName(branchName)
                 .creator(userRepository.findById(createVersionDto.getUsername()).get())

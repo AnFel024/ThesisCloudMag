@@ -10,6 +10,7 @@ import java.util.Set;
 @Mapper(componentModel = "spring", uses = {InstanceMapper.class, VersionMapper.class, UserMapper.class})
 public interface DeployMapper {
 
+    @Mapping(target = "date", ignore = true)
     Deploy mapToDeploy(DeployEntity deployEntity);
 
     Set<Deploy> mapToDeploySet(Set<DeployEntity> deployEntitySet);
