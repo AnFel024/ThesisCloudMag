@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.time.ZoneId.SHORT_IDS;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -77,7 +78,7 @@ public class AuditsService {
                             Project project = projectMapper.mapToProject(projectEntity1);
                             project.setDate(LocalDateTime.ofInstant( // TODO Corregir
                                     java.time.Instant.ofEpochMilli(projectEntity1.getCreatedAt()),
-                                    java.time.ZoneId.of("CST")).toString());
+                                    java.time.ZoneId.systemDefault()).toString());
                             return project;
                         })
                         .toList());

@@ -33,6 +33,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.String.format;
+import static java.time.ZoneId.SHORT_IDS;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -97,13 +98,13 @@ public class ProjectService {
         UserEntity userEntity = userRepository.findById(createAppDto.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
         StatusEntity statusEntity = StatusEntity.builder()
                 .statusName("PENDING")
-                .updatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli())
+                .updatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .updatedBy(userEntity)
                 .build();
         statusRepository.save(statusEntity);
         return ProjectEntity.builder()
                 .name(createAppDto.getName())
-                .createdAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .instanceInfo(instanceEntity)
                 .status(statusEntity)
                 .creator(userEntity)
@@ -151,7 +152,7 @@ public class ProjectService {
         String randomPass = RandomStringUtils.randomAlphabetic(10);
         DatabaseEntity project = DatabaseEntity.builder()
                 .name(createDatabaseDto.getName())
-                .createdAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .dbms(createDatabaseDto.getDbms_type())
                 .creator(userEntity)
                 .initialPassword(randomPass)
@@ -176,7 +177,7 @@ public class ProjectService {
                     Project project = projectMapper.mapToProject(projectEntity);
                     project.setDate(LocalDateTime.ofInstant(
                             java.time.Instant.ofEpochMilli(projectEntity.getCreatedAt()),
-                            java.time.ZoneId.of("CST")).toString());
+                            java.time.ZoneId.systemDefault()).toString());
                     return project;
                 })
                 .toList();
@@ -193,7 +194,7 @@ public class ProjectService {
                     Database database = databaseMapper.mapToDatabase(databaseEntity);
                     database.setDate(LocalDateTime.ofInstant(
                             java.time.Instant.ofEpochMilli(databaseEntity.getCreatedAt()),
-                            java.time.ZoneId.of("CST")).toString());
+                            java.time.ZoneId.systemDefault()).toString());
                     return database;
                 })
                 .toList();
@@ -233,7 +234,7 @@ public class ProjectService {
                         projectEntity.getInstanceInfo().setHostUrl(instance.publicDnsName());
                         StatusEntity status = projectEntity.getStatus();
                         status.setStatusName("APPROACHING");
-                        status.setUpdatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli());
+                        status.setUpdatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli());
                         statusRepository.save(status);
                         projectEntity.setStatus(status);
                         jenkinsClient.triggerScaffoldingJob(
@@ -248,7 +249,7 @@ public class ProjectService {
     public void validateAzureInstances(ProjectEntity projectEntity) {
         StatusEntity status = projectEntity.getStatus();
         status.setStatusName("APPROACHING");
-        status.setUpdatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli());
+        status.setUpdatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli());
         statusRepository.save(status);
         projectEntity.setStatus(status);
         jenkinsClient.triggerScaffoldingJob(projectEntity.getInstanceInfo().getHostUrl(), projectEntity.getName(), "id_rsa");
@@ -352,7 +353,7 @@ public class ProjectService {
         futureOfDeploys.thenCombine(futureOfVersions, (unused, unused2) -> {
             StatusEntity status = projectEntity.getStatus();
             status.setStatusName("DELETED");
-            status.setUpdatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli());
+            status.setUpdatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli());
             status.setUpdatedBy(userEntity);
             statusRepository.save(status);
             projectEntity.setStatus(status);

@@ -14,6 +14,8 @@ import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
+import static java.time.ZoneId.SHORT_IDS;
+
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class ValidationsService {
@@ -49,7 +51,7 @@ public class ValidationsService {
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         StatusEntity statusEntity = projectEntity.getStatus();
         statusEntity.setStatusName(status);
-        statusEntity.setUpdatedAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli());
+        statusEntity.setUpdatedAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli());
         statusRepository.save(statusEntity);
         projectEntity.setStatus(statusEntity);
         projectRepository.save(projectEntity);

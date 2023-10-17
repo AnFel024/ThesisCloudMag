@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.lang.String.format;
+import static java.time.ZoneId.SHORT_IDS;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -53,7 +54,7 @@ public class DeploysService {
                 .creator(userEntity)
                 .instanceInfo(versionEntity.getProjectInfo().getInstanceInfo())
                 .versionInfo(versionEntity)
-                .createdAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(java.time.ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(java.time.ZoneOffset.UTC).toEpochMilli())
                 .status(success ? "SUCCESS" : "FAILED")
                 .build();
         deployRepository.save(deployEntity);
@@ -70,7 +71,7 @@ public class DeploysService {
                             Deploy deploy = deployMapper.mapToDeploy(deployEntity);
                             deploy.setDate(LocalDateTime.ofInstant(
                                     java.time.Instant.ofEpochMilli(deployEntity.getCreatedAt()),
-                                    java.time.ZoneId.of("CST")).toString());
+                                    java.time.ZoneId.systemDefault()).toString());
                             return deploy;
                         })
                         .toList()).build();

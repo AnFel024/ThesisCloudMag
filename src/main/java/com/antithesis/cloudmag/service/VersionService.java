@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.lang.String.format;
+import static java.time.ZoneId.SHORT_IDS;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -51,7 +52,7 @@ public class VersionService {
         );
         VersionEntity versionEntity = VersionEntity.builder()
                 .name(createVersionDto.getTag())
-                .createdAt(LocalDateTime.now(ZoneId.of("CST")).toInstant(ZoneOffset.UTC).toEpochMilli())
+                .createdAt(LocalDateTime.now(ZoneId.of("America/Bogota")).toInstant(ZoneOffset.UTC).toEpochMilli())
                 .tagName(createVersionDto.getTag())
                 .branchName(branchName)
                 .creator(userRepository.findById(createVersionDto.getUsername()).get())
@@ -76,7 +77,7 @@ public class VersionService {
                             Version version = versionMapper.mapToVersion(versionEntity);
                             version.setDate(LocalDateTime.ofInstant(
                                     java.time.Instant.ofEpochMilli(versionEntity.getCreatedAt()),
-                                    java.time.ZoneId.of("CST")).toString());
+                                    java.time.ZoneId.systemDefault()).toString());
                             return version;
                         })
                         .toList())
