@@ -75,9 +75,9 @@ public class AuditsService {
                         .filter(projectEntity -> "AWS".equals(projectEntity.getInstanceInfo().getProvider()))
                         .map(projectEntity1 -> {
                             Project project = projectMapper.mapToProject(projectEntity1);
-                            project.setDate(LocalDateTime.ofInstant(
+                            project.setDate(LocalDateTime.ofInstant( // TODO Corregir
                                     java.time.Instant.ofEpochMilli(projectEntity1.getCreatedAt()),
-                                    java.time.ZoneId.systemDefault()).toString());
+                                    java.time.ZoneId.of("CST")).toString());
                             return project;
                         })
                         .toList());
@@ -87,11 +87,11 @@ public class AuditsService {
                         .toList());
 //        response.azureUrlInvoice(blobInfos.get(0).blobLink());
         response.azureUrlInvoice(
-                        "https://ccmreportstoragenortheu.blob.core.windows.net/" +
-                                "armmusagedetailsreportdownloadcontainer/20231017/" +
-                                "0e7cc98f-ea47-4240-87ee-f3570698c2a7" +
-                                "?sv=2018-03-28&sr=b&sig=iMbhSxhj7vTzemkGG5lgBiljczsCSiDtOJ9DyAvzv14%3D&spr=https" +
-                                "&st=2023-10-17T00%3A16%3A57Z&se=2023-10-17T12%3A21%3A57Z&sp=r");
+                "https://ccmreportstoragewestus3.blob.core.windows.net/" +
+                "armmusagedetailsreportdownloadcontainer/20231017/" +
+                "9fdc5899-897b-43ab-abeb-7726c2b6e97a?sv=2018-03-28&sr=b" +
+                "&sig=FbKxchOUxK%2BRoO0CEzXHfhSAsXfXK8qt6oxi3BI6Rwk%3D&spr=https" +
+                "&st=2023-10-17T16%3A25%3A46Z&se=2023-10-18T04%3A30%3A46Z&sp=r");
         response.awsDateRange(
                 AuditsResponse.AwsDateRange.builder()
                         .ranges(awsRanges)

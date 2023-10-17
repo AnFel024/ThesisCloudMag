@@ -76,7 +76,7 @@ public class VersionService {
                             Version version = versionMapper.mapToVersion(versionEntity);
                             version.setDate(LocalDateTime.ofInstant(
                                     java.time.Instant.ofEpochMilli(versionEntity.getCreatedAt()),
-                                    java.time.ZoneId.systemDefault()).toString());
+                                    java.time.ZoneId.of("CST")).toString());
                             return version;
                         })
                         .toList())

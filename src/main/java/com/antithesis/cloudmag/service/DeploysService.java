@@ -70,7 +70,7 @@ public class DeploysService {
                             Deploy deploy = deployMapper.mapToDeploy(deployEntity);
                             deploy.setDate(LocalDateTime.ofInstant(
                                     java.time.Instant.ofEpochMilli(deployEntity.getCreatedAt()),
-                                    java.time.ZoneId.systemDefault()).toString());
+                                    java.time.ZoneId.of("CST")).toString());
                             return deploy;
                         })
                         .toList()).build();

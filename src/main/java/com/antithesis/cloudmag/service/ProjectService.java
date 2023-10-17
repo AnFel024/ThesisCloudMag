@@ -176,7 +176,7 @@ public class ProjectService {
                     Project project = projectMapper.mapToProject(projectEntity);
                     project.setDate(LocalDateTime.ofInstant(
                             java.time.Instant.ofEpochMilli(projectEntity.getCreatedAt()),
-                            java.time.ZoneId.systemDefault()).toString());
+                            java.time.ZoneId.of("CST")).toString());
                     return project;
                 })
                 .toList();
@@ -193,7 +193,7 @@ public class ProjectService {
                     Database database = databaseMapper.mapToDatabase(databaseEntity);
                     database.setDate(LocalDateTime.ofInstant(
                             java.time.Instant.ofEpochMilli(databaseEntity.getCreatedAt()),
-                            java.time.ZoneId.systemDefault()).toString());
+                            java.time.ZoneId.of("CST")).toString());
                     return database;
                 })
                 .toList();
